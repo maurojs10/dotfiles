@@ -1,0 +1,62 @@
+{{ if eq .chezmoi.os "windows" -}}
+#Requires -RunAsAdministrator
+
+Write-Output "`n * * Set PowerShell execution policy for scripts * * `n"
+Set-ExecutionPolicy RemoteSigned -Scope Process -Force
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+
+Write-Output "`n * * Add PowerShell profile script * * `n"
+If (!(Test-Path (Split-Path -Path $PROFILE))) { New-Item -Path (Split-Path -Path $PROFILE) -ItemType Directory | Out-Null }
+If (!(Test-Path $PROFILE)) { New-Item -Path $PROFILE -ItemType File | Out-Null }
+
+Write-Output "`n * * Configure Chocolatey in PowerShell profile script * * `n"
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+$ChocolateyProfileInstall = @'
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path $ChocolateyProfile) {
+  Import-Module $ChocolateyProfile
+}
+'@
+if (!(Select-String $PROFILE -Pattern '$ChocolateyProfile' -Quiet -SimpleMatch)) {
+  $ChocolateyProfileInstall | Out-File $PROFILE -Append -Encoding utf8
+  Import-Module $ChocolateyProfile
+}
+
+Write-Output "`n * * Configure Chocolatey to bypass confirmations * * `n"
+choco feature enable -n allowGlobalConfirmation
+
+Write-Output "`n * * Configure Chocolatey to use installation arguments for upgrades * * `n"
+choco feature enable -n useRememberedArgumentsForUpgrades
+
+If (!(Test-Path '{{ .ssh.keyfile }}')) {
+  If (!(Test-Path (Split-Path -Path '{{ .ssh.keyfile }}'))) { 
+    Write-Output "`n * * Create SSH folder * * `n"
+    New-Item -Path (Split-Path -Path '{{ .ssh.keyfile }}') -ItemType Directory | Out-Null
+  }
+
+  Write-Output "`n * * Generate SSH key * * `n"
+  ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname }}' -N '""'
+
+  Write-Output "`n * * Copy public key to clipboard * * `n"
+  Get-Content '{{ .ssh.publickey }}' | Set-Clipboard
+
+  Write-Output "`n > > Open the link below, select Autentication Key, paste the public key, click Add SSH key and come back here. < < `n"
+  Write-Output "https://github.com/settings/ssh/new"
+  Read-Host -Prompt "Press ENTER to continue"
+
+  Write-Output "`n > > Open the link below, select Signing Key, paste the public key, click Add SSH key and come back here. < < `n"
+  Write-Output "https://github.com/settings/ssh/new"
+  Read-Host -Prompt "Press ENTER to continue"
+}
+
+Write-Output "`n * * Install Git * * `n"
+choco install git
+refreshenv
+
+Write-Output "`n * * Install micro * * `n"
+choco install micro
+
+Write-Output "`n * * Finished installing packages * * `n"
+
+exit 0
+{{ end -}}

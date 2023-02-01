@@ -1,0 +1,79 @@
+[user]
+	name = {{ .git.name }}
+	email = {{ .git.email }}
+	signingkey = {{ or .gpg.keyid .ssh.publickey }}
+[commit]
+	gpgSign = true
+[core]
+	autocrlf = false
+	editor = micro
+	fscache = true
+	sshCommand = ssh
+[gitflow "hotfix.finish"]
+	sign = true
+[gitflow "release.branch"]
+	sign = true
+[gitflow "release.finish"]
+	sign = true
+[gpg]
+	format = {{ not .gpg.keyid | ternary "ssh" "openpgp" }}
+[init]
+	defaultBranch = main
+[log]
+	date = format-local:"%Y-%m-%d %H:%M:%S"
+[push]
+	default = simple
+	autoSetupRemote = true
+[tag]
+	gpgSign = true
+[alias]
+	# https://dev.to/ybbond/comment/cf8p
+	cane = commit --amend --no-edit
+	# https://grantwinney.com/what-is-a-git-alias-and-how-do-i-use-it
+	shove = !git add . && git commit --allow-empty-message -m \"\" && git push
+	# https://gggritso.com/human-git-aliases
+	aliases = alias
+	branches = branch -a
+	remotes = remote -v
+	stashes = stash list
+	tags = tag
+	# https://gggritso.com/human-git-aliases
+	uncommit = reset --mixed HEAD~
+	unstage = reset -q HEAD --
+	# Custom
+	summary2 = "!f() { onefetch --show-logo=never $@; }; f"
+	pab = push origin : --follow-tags --verbose
+	pufo = push --force origin --verbose
+	log-since-last-merge = "!f() { git log `git log --pretty=format:\"%H\" --merges -n 1`..HEAD $@; }; f"
+	rebase-since-last-merge = "!f() { git rebase --interactive `git log --pretty=format:\"%H\" --merges -n 1` $@; }; f"
+	rslm = rebase-since-last-merge
+	# Custom Git Flow
+	ffs = "!f() { set -x; git checkout develop && git config --local gitflow.branch.feature/$1.base develop && git branch feature/$1 && git reset --hard $2 && git checkout feature/$1 && git fetch origin && git push --set-upstream origin feature/$1:feature/$1; }; f"
+	fff = "!f() { set -x; git fetch origin feature/$1 && git checkout feature/$1 && git rebase develop && git checkout develop && git merge --ff-only feature/$1 && git push origin --delete feature/$1 && git branch --delete feature/$1 && git config --local --remove-section gitflow.branch.feature/$1; }; f"
+	ffr = flow feature rebase
+	ffc = flow feature checkout
+	ffl = flow feature list
+	# https://gist.github.com/diego3g/2b563e54e82bed5530d8346b89a701ab
+	# https://www.youtube.com/watch?v=VpeU3VpszAc
+	ci = commit
+	co = checkout
+	cm = checkout master
+	cb = checkout -b
+	st = status -sb
+	sf = show --name-only
+	lg = log --pretty=format:'%Cred%h%Creset %C(bold)%cr%Creset %Cgreen<%an>%Creset %s' --max-count=30
+	incoming = !(git fetch --quiet && git log --pretty=format:'%C(yellow)%h %C(white)- %C(red)%an %C(white)- %C(cyan)%d%Creset %s %C(white)- %ar%Creset' ..@{u})
+	outgoing = !(git fetch --quiet && git log --pretty=format:'%C(yellow)%h %C(white)- %C(red)%an %C(white)- %C(cyan)%d%Creset %s %C(white)- %ar%Creset' @{u}..)
+	undo = checkout --
+	rollback = reset --soft HEAD~1
+	# Git Bash
+	bash = !bash
+	# Git GPG tools
+	gpg = !gpg
+	gpgconf = !gpgconf
+	gpg-connect-agent = !gpg-connect-agent
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f

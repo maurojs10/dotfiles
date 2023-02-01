@@ -1,0 +1,57 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/dash
+
+if [ ! -e '{{ .ssh.keyfile }}' ]; then
+  echo "\n * * Generate SSH key * * \n"
+  ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname }}' -N ''
+
+  echo "\n * * Copy public key to clipboard * * \n"
+  cat '{{ .ssh.publickey }}' | xclip -selection clipboard
+
+  echo "\n > > Open the link below, select Autentication Key, paste the public key, click Add SSH key and come back here. < < \n"
+  echo "https://github.com/settings/ssh/new"
+  read -p "Press ENTER to continue: " REPLY
+
+  echo "\n > > Open the link below, select Signing Key, paste the public key, click Add SSH key and come back here. < < \n"
+  echo "https://github.com/settings/ssh/new"
+  read -p "Press ENTER to continue: " REPLY
+fi
+
+echo "\n * * Install Git * * \n"
+sudo apt install git -y
+
+echo "\n * * Install micro * * \n"
+sudo apt install micro -y
+
+echo "\n * * Finished installing packages * * \n"
+
+exit 0
+{{ else if eq .chezmoi.os "darwin" -}}
+#!/bin/zsh
+
+if [ ! -e '{{ .ssh.keyfile }}' ]; then
+  echo "\n * * Generate SSH key * * \n"
+  ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname }}' -N ''
+
+  echo "\n * * Copy public key to clipboard * * \n"
+  cat '{{ .ssh.publickey }}' | pbcopy
+
+  echo "\n > > Open the link below, select Autentication Key, paste the public key, click Add SSH key and come back here. < < \n"
+  echo "https://github.com/settings/ssh/new"
+  read "REPLY?Press ENTER to continue: "
+
+  echo "\n > > Open the link below, select Signing Key, paste the public key, click Add SSH key and come back here. < < \n"
+  echo "https://github.com/settings/ssh/new"
+  read "REPLY?Press ENTER to continue: "
+fi
+
+echo "\n * * Install Git * * \n"
+brew install git
+
+echo "\n * * Install micro * * \n"
+brew install micro
+
+echo "\n * * Finished installing packages * * \n"
+
+exit 0
+{{ end -}}
