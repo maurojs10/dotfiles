@@ -26,6 +26,17 @@ sudo apt install micro -y
 echo "\n * * Install Visual Studio Code * * \n"
 sudo snap install code --classic
 
+echo "\n * * Install GitHub CLI * * \n"
+type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+&& sudo apt update \
+&& sudo apt install gh -y
+
+echo "\n * * Authenticate with GitHub * * \n"
+gh auth login --scopes "gist read:org repo"
+
 echo "\n * * Finished installing packages * * \n"
 
 exit 0
@@ -56,6 +67,12 @@ brew install micro
 
 echo "\n * * Install Visual Studio Code * * \n"
 brew install --cask visual-studio-code
+
+echo "\n * * Install GitHub CLI * * \n"
+brew install gh
+
+echo "\n * * Authenticate with GitHub * * \n"
+gh auth login --scopes "gist read:org repo"
 
 echo "\n * * Finished installing packages * * \n"
 

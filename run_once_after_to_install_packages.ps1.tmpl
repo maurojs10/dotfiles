@@ -60,6 +60,13 @@ Write-Output "`n * * Install Visual Studio Code * * `n"
 choco install vscode
 refreshenv
 
+Write-Output "`n * * Install GitHub CLI * * `n"
+choco install gh
+refreshenv
+
+Write-Output "`n * * Authenticate with GitHub * * `n"
+gh auth login --scopes "gist read:org repo"
+
 Write-Output "`n * * Finished installing packages * * `n"
 
 exit 0
