@@ -4,17 +4,6 @@
 if [ ! -e '{{ .ssh.keyfile }}' ]; then
   echo "\n * * Generate SSH key * * \n"
   ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname }}' -N ''
-
-  echo "\n * * Copy public key to clipboard * * \n"
-  cat '{{ .ssh.publickey }}' | xclip -selection clipboard
-
-  echo "\n > > Open the link below, select Autentication Key, paste the public key, click Add SSH key and come back here. < < \n"
-  echo "https://github.com/settings/ssh/new"
-  read -p "Press ENTER to continue: " REPLY
-
-  echo "\n > > Open the link below, select Signing Key, paste the public key, click Add SSH key and come back here. < < \n"
-  echo "https://github.com/settings/ssh/new"
-  read -p "Press ENTER to continue: " REPLY
 fi
 
 echo "\n * * Install Git * * \n"
@@ -35,7 +24,13 @@ curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo 
 && sudo apt install gh -y
 
 echo "\n * * Authenticate with GitHub * * \n"
-gh auth login --scopes "gist read:org repo"
+gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"
+
+echo "\n * * Add SSH key to GitHub for authentication * * \n"
+gh ssh-key add '{{ .ssh.publickey }}' --type authentication
+
+echo "\n * * Add SSH key to GitHub for signing * * \n"
+gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
 echo "\n * * Finished installing packages * * \n"
 
@@ -46,17 +41,6 @@ exit 0
 if [ ! -e '{{ .ssh.keyfile }}' ]; then
   echo "\n * * Generate SSH key * * \n"
   ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname }}' -N ''
-
-  echo "\n * * Copy public key to clipboard * * \n"
-  cat '{{ .ssh.publickey }}' | pbcopy
-
-  echo "\n > > Open the link below, select Autentication Key, paste the public key, click Add SSH key and come back here. < < \n"
-  echo "https://github.com/settings/ssh/new"
-  read "REPLY?Press ENTER to continue: "
-
-  echo "\n > > Open the link below, select Signing Key, paste the public key, click Add SSH key and come back here. < < \n"
-  echo "https://github.com/settings/ssh/new"
-  read "REPLY?Press ENTER to continue: "
 fi
 
 echo "\n * * Install Git * * \n"
@@ -72,7 +56,13 @@ echo "\n * * Install GitHub CLI * * \n"
 brew install gh
 
 echo "\n * * Authenticate with GitHub * * \n"
-gh auth login --scopes "gist read:org repo"
+gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"
+
+echo "\n * * Add SSH key to GitHub for authentication * * \n"
+gh ssh-key add '{{ .ssh.publickey }}' --type authentication
+
+echo "\n * * Add SSH key to GitHub for signing * * \n"
+gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
 echo "\n * * Finished installing packages * * \n"
 

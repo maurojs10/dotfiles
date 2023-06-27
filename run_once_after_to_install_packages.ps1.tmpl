@@ -36,17 +36,6 @@ If (!(Test-Path '{{ .ssh.keyfile }}')) {
 
   Write-Output "`n * * Generate SSH key * * `n"
   ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname }}' -N '""'
-
-  Write-Output "`n * * Copy public key to clipboard * * `n"
-  Get-Content '{{ .ssh.publickey }}' | Set-Clipboard
-
-  Write-Output "`n > > Open the link below, select Autentication Key, paste the public key, click Add SSH key and come back here. < < `n"
-  Write-Output "https://github.com/settings/ssh/new"
-  Read-Host -Prompt "Press ENTER to continue"
-
-  Write-Output "`n > > Open the link below, select Signing Key, paste the public key, click Add SSH key and come back here. < < `n"
-  Write-Output "https://github.com/settings/ssh/new"
-  Read-Host -Prompt "Press ENTER to continue"
 }
 
 Write-Output "`n * * Install Git * * `n"
@@ -65,7 +54,13 @@ choco install gh
 refreshenv
 
 Write-Output "`n * * Authenticate with GitHub * * `n"
-gh auth login --scopes "gist read:org repo"
+gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"
+
+Write-Output "`n * * Add SSH key to GitHub for authentication * * `n"
+gh ssh-key add '{{ .ssh.publickey }}' --type authentication
+
+Write-Output "`n * * Add SSH key to GitHub for signing * * `n"
+gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
 Write-Output "`n * * Finished installing packages * * `n"
 
