@@ -17,6 +17,8 @@
 	sign = true
 [gpg]
 	format = {{ not .gpg.keyid | ternary "ssh" "openpgp" }}
+[gpg "ssh"]
+	allowedSignersFile = {{ .ssh.allowedSigners }}
 [init]
 	defaultBranch = main
 [log]
