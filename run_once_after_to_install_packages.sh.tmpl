@@ -34,6 +34,21 @@ gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
 echo "\n * * Finished installing packages * * \n"
 
+echo "\n * * Create folder for source code repositories * * \n"
+if [ ! -e ~/Repositories ]; then
+  mkdir -p ~/Repositories
+fi
+
+echo "\n * * Create folder for source code subfolders * * \n"
+if [ ! -e ~/source ]; then
+  mkdir -p ~/source
+fi
+
+echo "\n * * Create symlink for source code repositories * * \n"
+if [ ! -e ~/source/repos ]; then
+  ln -s ~/Repositories ~/source/repos
+fi
+
 exit 0
 {{ else if eq .chezmoi.os "darwin" -}}
 #!/bin/zsh
@@ -65,6 +80,21 @@ echo "\n * * Add SSH key to GitHub for signing * * \n"
 gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
 echo "\n * * Finished installing packages * * \n"
+
+echo "\n * * Create folder for source code repositories * * \n"
+if [ ! -e ~/Repositories ]; then
+  mkdir -p ~/Repositories
+fi
+
+echo "\n * * Create folder for source code subfolders * * \n"
+if [ ! -e ~/source ]; then
+  mkdir -p ~/source
+fi
+
+echo "\n * * Create symlink for source code repositories * * \n"
+if [ ! -e ~/source/repos ]; then
+  ln -s ~/Repositories ~/source/repos
+fi
 
 exit 0
 {{ end -}}
