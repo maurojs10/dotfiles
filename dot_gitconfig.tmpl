@@ -50,7 +50,13 @@
 	log-since-last-merge = "!f() { git log `git log --no-show-signature --pretty=format:\"%H\" --merges -n 1`..HEAD $@; }; f"
 	rebase-since-last-merge = "!f() { git rebase --interactive `git log --no-show-signature --pretty=format:\"%H\" --merges -n 1` $@; }; f"
 	rslm = rebase-since-last-merge
-	# Custom Git Flow
+	# Custom Git Flow Bugfix
+	fbs = "!f() { set -x; git checkout develop && git config --local gitflow.branch.bugfix/$1.base develop && git branch bugfix/$1 && git reset --hard $2 && git checkout bugfix/$1 && git fetch origin && git push --set-upstream origin bugfix/$1:bugfix/$1; }; f"
+	fbf = "!f() { set -x; git fetch origin bugfix/$1 && git checkout bugfix/$1 && git rebase develop && git checkout develop && git merge --ff-only bugfix/$1 && git push origin --delete bugfix/$1 && git branch --delete bugfix/$1 && git config --local --remove-section gitflow.branch.bugfix/$1; }; f"
+	fbr = flow bugfix rebase
+	fbc = flow bugfix checkout
+	fbl = flow bugfix list
+	# Custom Git Flow Feature
 	ffs = "!f() { set -x; git checkout develop && git config --local gitflow.branch.feature/$1.base develop && git branch feature/$1 && git reset --hard $2 && git checkout feature/$1 && git fetch origin && git push --set-upstream origin feature/$1:feature/$1; }; f"
 	fff = "!f() { set -x; git fetch origin feature/$1 && git checkout feature/$1 && git rebase develop && git checkout develop && git merge --ff-only feature/$1 && git push origin --delete feature/$1 && git branch --delete feature/$1 && git config --local --remove-section gitflow.branch.feature/$1; }; f"
 	ffr = flow feature rebase
