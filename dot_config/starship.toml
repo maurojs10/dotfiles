@@ -1,0 +1,132 @@
+format = """
+$username\
+[](fg:username_bg bg:hostname_bg)\
+$hostname\
+[](fg:hostname_bg bg:os_bg)\
+$os\
+[](fg:os_bg bg:directory_bg)\
+$directory\
+[](fg:directory_bg bg:git_bg)\
+$git_branch\
+$git_state\
+$git_status\
+$git_metrics\
+[](fg:git_bg bg:tool_bg)\
+$nodejs\
+$rust\
+$golang\
+$php\
+$terraform\
+[](fg:tool_bg bg:time_bg)\
+$time\
+[](fg:time_bg)\
+\n$character"""
+
+palette = 'custom'
+
+[palettes.custom]
+username_fg = '#090c0c'
+username_bg = '#838ec2'
+hostname_fg = '#090c0c'
+hostname_bg = '#939ed2'
+os_fg = '#090c0c'
+os_bg = '#a3aed2'
+# directory_fg = '#e3e5e5'
+# directory_bg = '#769ff0'
+directory_fg = '#090c0c'
+directory_bg = '#c3cef2'
+git_fg = '#769ff0'
+git_bg = '#394260'
+tool_fg = '#769ff0'
+tool_bg = '#212736'
+time_fg = '#a0a9cb'
+time_bg = '#1d2230'
+
+[username]
+format = "[[  ($user)](fg:username_fg bg:username_bg)]($style)"
+style_user = 'white bold'
+style_root = 'black bold'
+show_always = true
+
+[hostname]
+format = "[[  ($hostname)](fg:hostname_fg bg:hostname_bg)]($style)"
+ssh_only = false
+disabled = false
+
+[os]
+format = "[[ $symbol ($name $version)](fg:os_fg bg:os_bg)]($style)"
+style = "bold blue"
+disabled = false
+
+[os.symbols]
+Windows = "󰖳"
+
+[directory]
+format = "[[ 󰝰 ($path)](fg:directory_fg bg:directory_bg)]($style)"
+style = "fg:directory_fg bg:directory_bg"
+truncate_to_repo = false
+truncation_length = 0
+truncation_symbol = "…/"
+use_os_path_sep = false
+
+[directory.substitutions]
+
+[git_branch]
+format = '[[ $symbol ($branch)](fg:git_fg bg:git_bg)]($style)'
+symbol = ""
+style = "bg:git_bg"
+
+[git_state]
+format = '[|$state( $progress_current of $progress_total)(fg:git_fg bg:git_bg)]($style)'
+style = "bg:git_bg"
+
+[git_status]
+format = '[[( $ahead_behind$all_status)](fg:git_fg bg:git_bg)]($style)'
+style = "bg:git_bg"
+ahead = '[⇡${count}](fg:green bg:git_bg)'
+behind = '[⇣${count}](fg:red bg:git_bg)'
+diverged = '[⇡${ahead_count}](fg:yellow bg:git_bg) [⇣${behind_count}](fg:red bg:git_bg)'
+up_to_date = '[≡](fg:green bg:git_bg)'
+conflicted = ''
+stashed = ''
+deleted = ' [-$count](fg:red bg:git_bg)'
+renamed = ' [~$count](fg:green bg:git_bg)'
+modified = ' [~$count](fg:red bg:git_bg)'
+typechanged = ' [~$count](fg:red bg:git_bg)'
+staged = ' [+$count](fg:green bg:git_bg)'
+untracked = ' [+$count](fg:yellow bg:git_bg)'
+
+[git_metrics]
+format = '[( [⨤$added](fg:green bg:git_bg))( [≂$deleted](fg:red bg:git_bg))](bg:git_bg)'
+disabled = false
+
+[nodejs]
+symbol = ""
+format = '[[ $symbol ($version)](fg:tool_fg bg:tool_bg)]($style)'
+style = "bg:tool_bg"
+
+[rust]
+symbol = ""
+format = '[[ $symbol ($version)](fg:tool_fg bg:tool_bg)]($style)'
+style = "bg:tool_bg"
+
+[golang]
+symbol = ""
+format = '[[ $symbol ($version)](fg:tool_fg bg:tool_bg)]($style)'
+style = "bg:tool_bg"
+
+[php]
+symbol = ""
+format = '[[ $symbol ($version)](fg:tool_fg bg:tool_bg)]($style)'
+style = "bg:tool_bg"
+
+[terraform]
+symbol = "󱁢"
+format = '[[ $symbol ($workspace)](fg:tool_fg bg:tool_bg)]($style)'
+style = "bg:tool_bg"
+
+[time]
+disabled = false
+time_format = "%R" # Hour:Minute Format
+style = "bg:time_bg"
+format = '[[  $time](fg:time_fg bg:time_bg)]($style)'
