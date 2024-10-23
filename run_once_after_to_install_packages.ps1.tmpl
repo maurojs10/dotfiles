@@ -62,6 +62,9 @@ gh ssh-key add '{{ .ssh.publickey }}' --type authentication
 Write-Output "`n * * Add SSH key to GitHub for signing * * `n"
 gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
+Write-Output "`n * * Install Nerd Fonts CaskaydiaMono * * `n"
+choco install nerd-fonts-cascadiamono
+
 Write-Output "`n * * Finished installing packages * * `n"
 
 Write-Output "`n * * Create folder for source code repositories * * `n"
