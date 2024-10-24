@@ -59,10 +59,10 @@ style = "bold blue"
 disabled = false
 
 [os.symbols]
-Windows = "󰖳"
+Windows = ""
 
 [directory]
-format = "[[ 󰝰 ($path)](fg:directory_fg bg:directory_bg)]($style)"
+format = "[[  ($path)](fg:directory_fg bg:directory_bg)]($style)"
 style = "fg:directory_fg bg:directory_bg"
 truncate_to_repo = false
 truncation_length = 0
