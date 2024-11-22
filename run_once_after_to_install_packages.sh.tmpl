@@ -32,6 +32,16 @@ gh ssh-key add '{{ .ssh.publickey }}' --type authentication
 echo "\n * * Add SSH key to GitHub for signing * * \n"
 gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
+echo "\n * * Install Nerd Fonts CaskaydiaMono * * \n"
+if [ ! -e ~/.local/share/fonts/CaskaydiaMonoNerdFont-Regular.ttf ]; then
+  mkdir -p ~/.local/share/fonts
+  chmod 755 ~/.local/share/fonts
+  curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/CascadiaMono.zip -o ~/.local/share/fonts/CascadiaMono.zip
+  unzip -o ~/.local/share/fonts/CascadiaMono.zip 'CaskaydiaMonoNerdFont*.ttf' -d ~/.local/share/fonts
+  rm -f ~/.local/share/fonts/CascadiaMono.zip
+  chmod 644 ~/.local/share/fonts/CaskaydiaMonoNerdFont*.ttf
+fi
+
 echo "\n * * Finished installing packages * * \n"
 
 echo "\n * * Create folder for source code repositories * * \n"
