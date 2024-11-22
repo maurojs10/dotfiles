@@ -42,6 +42,12 @@ if [ ! -e ~/.local/share/fonts/CaskaydiaMonoNerdFont-Regular.ttf ]; then
   chmod 644 ~/.local/share/fonts/CaskaydiaMonoNerdFont*.ttf
 fi
 
+echo "\n * * Install Starship * * \n"
+curl -sS https://starship.rs/install.sh | sh -s -- --yes
+if ! grep -Fxq 'eval "$(starship init bash)"' ~/.bashrc; then
+  echo 'eval "$(starship init bash)"' >> ~/.bashrc
+fi
+
 echo "\n * * Finished installing packages * * \n"
 
 echo "\n * * Create folder for source code repositories * * \n"

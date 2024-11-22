@@ -60,6 +60,7 @@ disabled = false
 
 [os.symbols]
 Windows = ""
+Ubuntu = ""
 
 [directory]
 format = "[[  ($path)](fg:directory_fg bg:directory_bg)]($style)"
