@@ -80,5 +80,8 @@ If (!(Test-Path "$env:USERPROFILE\source\repos")) {
   New-Item -Path "$env:USERPROFILE\source\repos" -ItemType Directory | Out-Null
 }
 
+Write-Output "`n * * Set environment variables for WSL * * `n"
+setx WSLENV USERPROFILE/up
+
 exit 0
 {{ end -}}

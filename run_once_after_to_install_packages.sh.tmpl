@@ -50,6 +50,12 @@ fi
 
 echo "\n * * Finished installing packages * * \n"
 
+{{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+echo "\n * * Create symlink for source code subfolders * * \n"
+if [ ! -e ~/source ]; then
+  ln -s "$USERPROFILE/source" ~/source
+fi
+{{ else }}
 echo "\n * * Create folder for source code subfolders * * \n"
 if [ ! -e ~/source ]; then
   mkdir -p ~/source
@@ -59,6 +65,7 @@ echo "\n * * Create subfolder for source code repositories * * \n"
 if [ ! -e ~/source/repos ]; then
   mkdir -p ~/source/repos
 fi
+{{ end }}
 
 exit 0
 {{ else if eq .chezmoi.os "darwin" -}}
