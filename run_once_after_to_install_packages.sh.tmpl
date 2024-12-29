@@ -2,8 +2,17 @@
 #!/bin/dash
 
 if [ ! -e '{{ .ssh.keyfile }}' ]; then
+{{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+  echo "\n * * Create symlink for SSH folder * * \n"
+  if [ ! -e ~/.ssh ]; then
+    ln -s "$USERPROFILE/.ssh" ~/.ssh
+    chmod 700 ~/.ssh
+    chmod 600 ~/.ssh/*
+  fi
+{{ else }}
   echo "\n * * Generate SSH key * * \n"
   ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname }}' -N ''
+{{ end }}
 fi
 
 echo "\n * * Install Git * * \n"
