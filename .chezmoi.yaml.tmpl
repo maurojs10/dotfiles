@@ -2,8 +2,6 @@ data:
   git:
     name: {{ promptStringOnce . "git.name" "What's your Git name" }}
     email: {{ promptStringOnce . "git.email" "What's your Git email" }}
-  gpg:
-    keyid: {{ promptStringOnce . "gpg.keyid" "What's your GPG key ID" }}
   ssh:
     keytype: ed25519
     keyfile: {{ .chezmoi.homeDir }}/.ssh/id_ed25519

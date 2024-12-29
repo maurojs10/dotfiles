@@ -1,7 +1,7 @@
 [user]
 	name = {{ .git.name }}
 	email = {{ .git.email }}
-	signingkey = {{ or .gpg.keyid .ssh.publickey }}
+	signingkey = {{ .ssh.publickey }}
 [commit]
 	gpgSign = true
 [core]
@@ -16,7 +16,7 @@
 [gitflow "release.finish"]
 	sign = true
 [gpg]
-	format = {{ not .gpg.keyid | ternary "ssh" "openpgp" }}
+	format = ssh
 [gpg "ssh"]
 	allowedSignersFile = {{ .ssh.allowedSigners }}
 [init]
@@ -77,10 +77,6 @@
 	rollback = reset --soft HEAD~1
 	# Git Bash
 	bash = !bash
-	# Git GPG tools
-	gpg = !gpg
-	gpgconf = !gpgconf
-	gpg-connect-agent = !gpg-connect-agent
 [filter "lfs"]
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
