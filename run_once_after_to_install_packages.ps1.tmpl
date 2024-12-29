@@ -70,19 +70,14 @@ choco install starship
 
 Write-Output "`n * * Finished installing packages * * `n"
 
-Write-Output "`n * * Create folder for source code repositories * * `n"
-If (!(Test-Path "$env:USERPROFILE\Repositories")) {
-  New-Item -Path "$env:USERPROFILE\Repositories" -ItemType Directory | Out-Null
-}
-
 Write-Output "`n * * Create folder for source code subfolders * * `n"
 If (!(Test-Path "$env:USERPROFILE\source")) {
   New-Item -Path "$env:USERPROFILE\source" -ItemType Directory | Out-Null
 }
 
-Write-Output "`n * * Create symlink for source code repositories * * `n"
+Write-Output "`n * * Create subfolder for source code repositories * * `n"
 If (!(Test-Path "$env:USERPROFILE\source\repos")) {
-  New-Item -Path "$env:USERPROFILE\source\repos" -Target "$env:USERPROFILE\Repositories" -ItemType SymbolicLink | Out-Null
+  New-Item -Path "$env:USERPROFILE\source\repos" -ItemType Directory | Out-Null
 }
 
 exit 0
