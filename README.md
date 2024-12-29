@@ -1,7 +1,9 @@
 # My Personal dotfiles Managed by chezmoi
 
 A collection of my personal configuration files for various tools that I use.
-> ⚠️ This repository is for my private use only and not intended for public distribution or use.
+
+> [!WARNING]  
+> This repository is for my private use only and not intended for public distribution or use.
 
 <details>
 <summary><b>Installation on Windows</b></summary>
