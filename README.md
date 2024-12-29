@@ -5,6 +5,13 @@ A collection of my personal configuration files for various tools that I use.
 > [!WARNING]  
 > This repository is for my private use only and not intended for public distribution or use.
 
+> [!IMPORTANT]  
+> Before installing on WSL, edit file `/etc/wsl.conf` and add the following lines:
+> ```
+> [automount]
+> options="metadata,umask=022,fmask=011"
+> ```
+
 <details>
 <summary><b>Installation on Windows</b></summary>
 
