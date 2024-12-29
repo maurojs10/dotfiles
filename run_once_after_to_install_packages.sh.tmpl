@@ -12,8 +12,10 @@ sudo apt install git -y
 echo "\n * * Install micro * * \n"
 sudo apt install micro -y
 
+{{ if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 echo "\n * * Install Visual Studio Code * * \n"
 sudo snap install code --classic
+{{ end }}
 
 echo "\n * * Install GitHub CLI * * \n"
 type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
