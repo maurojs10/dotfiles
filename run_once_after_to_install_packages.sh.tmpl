@@ -7,7 +7,9 @@ if [ ! -e '{{ .ssh.keyfile }}' ]; then
 fi
 
 echo "\n * * Install Git * * \n"
-sudo apt install git -y
+sudo add-apt-repository ppa:git-core/ppa -y \
+&& sudo apt update \
+&& sudo apt install git -y
 
 echo "\n * * Install micro * * \n"
 sudo apt install micro -y
