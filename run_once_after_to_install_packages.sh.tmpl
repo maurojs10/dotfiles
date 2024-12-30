@@ -3,7 +3,7 @@
 
 if [ ! -e '{{ .ssh.keyfile }}' ]; then
 {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-  if [ ! -e ~/.ssh ]; then
+  if [ ! -e ~/.ssh ] && [ -e "$USERPROFILE/.ssh" ]; then
     echo -e "\n * * Create symlink for SSH folder * * \n"
     ln -s "$USERPROFILE/.ssh" ~/.ssh
     chmod 700 ~/.ssh
@@ -75,7 +75,7 @@ if ! grep -Fxq 'eval "$(starship init bash)"' ~/.bashrc; then
 fi
 
 {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-if [ ! -e ~/source ]; then
+if [ ! -e ~/source ] && [ -e "$USERPROFILE/source" ]; then
   echo -e "\n * * Create symlink for source code subfolders * * \n"
   ln -s "$USERPROFILE/source" ~/source
 fi
