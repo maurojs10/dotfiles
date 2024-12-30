@@ -15,26 +15,34 @@ if [ ! -e '{{ .ssh.keyfile }}' ]; then
 {{ end }}
 fi
 
-echo "\n * * Install Git * * \n"
-sudo add-apt-repository ppa:git-core/ppa -y \
-&& sudo apt update \
-&& sudo apt install git -y
+if ! command -v git &> /dev/null; then
+  echo "\n * * Install Git * * \n"
+  sudo add-apt-repository ppa:git-core/ppa -y \
+  && sudo apt update \
+  && sudo apt install git -y
+fi
 
-echo "\n * * Install micro * * \n"
-sudo apt install micro -y
+if ! command -v micro &> /dev/null; then
+  echo "\n * * Install micro * * \n"
+  sudo apt install micro -y
+fi
 
 {{ if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-echo "\n * * Install Visual Studio Code * * \n"
-sudo snap install code --classic
+if ! command -v code &> /dev/null; then
+  echo "\n * * Install Visual Studio Code * * \n"
+  sudo snap install code --classic
+fi
 {{ end }}
 
-echo "\n * * Install GitHub CLI * * \n"
-type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-&& sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-&& sudo apt update \
-&& sudo apt install gh -y
+if ! command -v gh &> /dev/null; then
+  echo "\n * * Install GitHub CLI * * \n"
+  type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+  curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+  && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+  && sudo apt update \
+  && sudo apt install gh -y
+fi
 
 echo "\n * * Authenticate with GitHub * * \n"
 gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"
@@ -45,8 +53,8 @@ gh ssh-key add '{{ .ssh.publickey }}' --type authentication
 echo "\n * * Add SSH key to GitHub for signing * * \n"
 gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
-echo "\n * * Install Nerd Fonts CaskaydiaMono * * \n"
 if [ ! -e ~/.local/share/fonts/CaskaydiaMonoNerdFont-Regular.ttf ]; then
+  echo "\n * * Install Nerd Fonts CaskaydiaMono * * \n"
   mkdir -p ~/.local/share/fonts
   chmod 755 ~/.local/share/fonts
   curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/CascadiaMono.zip -o ~/.local/share/fonts/CascadiaMono.zip
@@ -55,9 +63,13 @@ if [ ! -e ~/.local/share/fonts/CaskaydiaMonoNerdFont-Regular.ttf ]; then
   chmod 644 ~/.local/share/fonts/CaskaydiaMonoNerdFont*.ttf
 fi
 
-echo "\n * * Install Starship * * \n"
-curl -sS https://starship.rs/install.sh | sh -s -- --yes
+if ! command -v starship &> /dev/null; then
+  echo "\n * * Install Starship * * \n"
+  curl -sS https://starship.rs/install.sh | sh -s -- --yes
+fi
+
 if ! grep -Fxq 'eval "$(starship init bash)"' ~/.bashrc; then
+  echo "\n * * Add Starship to bash configuration * * \n"
   echo 'eval "$(starship init bash)"' >> ~/.bashrc
 fi
 
@@ -89,17 +101,25 @@ if [ ! -e '{{ .ssh.keyfile }}' ]; then
   ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname }}' -N ''
 fi
 
-echo "\n * * Install Git * * \n"
-brew install git
+if ! command -v git &> /dev/null; then
+  echo "\n * * Install Git * * \n"
+  brew install git
+fi
 
-echo "\n * * Install micro * * \n"
-brew install micro
+if ! command -v micro &> /dev/null; then
+  echo "\n * * Install micro * * \n"
+  brew install micro
+fi
 
-echo "\n * * Install Visual Studio Code * * \n"
-brew install --cask visual-studio-code
+if ! command -v code &> /dev/null; then
+  echo "\n * * Install Visual Studio Code * * \n"
+  brew install --cask visual-studio-code
+fi
 
-echo "\n * * Install GitHub CLI * * \n"
-brew install gh
+if ! command -v gh &> /dev/null; then
+  echo "\n * * Install GitHub CLI * * \n"
+  brew install gh
+fi
 
 echo "\n * * Authenticate with GitHub * * \n"
 gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"

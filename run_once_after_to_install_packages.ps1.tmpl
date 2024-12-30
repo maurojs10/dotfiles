@@ -38,20 +38,28 @@ If (!(Test-Path '{{ .ssh.keyfile }}')) {
   ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname }}' -N '""'
 }
 
-Write-Output "`n * * Install Git * * `n"
-choco install git
-refreshenv
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Git * * `n"
+  choco install git
+  refreshenv
+}
 
-Write-Output "`n * * Install micro * * `n"
-choco install micro
+if (-not (Get-Command micro -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install micro * * `n"
+  choco install micro
+}
 
-Write-Output "`n * * Install Visual Studio Code * * `n"
-choco install vscode
-refreshenv
+if (-not (Get-Command code -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Visual Studio Code * * `n"
+  choco install vscode
+  refreshenv
+}
 
-Write-Output "`n * * Install GitHub CLI * * `n"
-choco install gh
-refreshenv
+if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install GitHub CLI * * `n"
+  choco install gh
+  refreshenv
+}
 
 Write-Output "`n * * Authenticate with GitHub * * `n"
 gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"
@@ -62,11 +70,15 @@ gh ssh-key add '{{ .ssh.publickey }}' --type authentication
 Write-Output "`n * * Add SSH key to GitHub for signing * * `n"
 gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
-Write-Output "`n * * Install Nerd Fonts CaskaydiaMono * * `n"
-choco install nerd-fonts-cascadiamono
+if (!(Test-Path "$env:SystemRoot\Fonts\CaskaydiaMonoNerdFont-Regular.ttf")) {
+  Write-Output "`n * * Install Nerd Fonts CaskaydiaMono * * `n"
+  choco install nerd-fonts-cascadiamono
+}
 
-Write-Output "`n * * Install Starship * * `n"
-choco install starship
+if (-not (Get-Command starship -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Starship * * `n"
+  choco install starship
+}
 
 Write-Output "`n * * Finished installing packages * * `n"
 
