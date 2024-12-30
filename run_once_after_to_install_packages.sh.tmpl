@@ -1,19 +1,21 @@
 {{ if eq .chezmoi.os "linux" -}}
 #!/bin/bash
 
-if [ ! -e '{{ .ssh.keyfile }}' ]; then
 {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+if [ ! -e '{{ .ssh.keyfile }}' ]; then
   if [ ! -e ~/.ssh ] && [ -e "$USERPROFILE/.ssh" ]; then
     echo -e "\n * * Create symlink for SSH folder * * \n"
     ln -s "$USERPROFILE/.ssh" ~/.ssh
     chmod 700 ~/.ssh
     chmod 600 ~/.ssh/*
   fi
+fi
 {{ else }}
+if [ ! -e '{{ .ssh.keyfile }}' ]; then
   echo -e "\n * * Generate SSH key * * \n"
   ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname }}' -N ''
-{{ end }}
 fi
+{{ end }}
 
 if ! command -v git &> /dev/null; then
   echo -e "\n * * Install Git * * \n"
