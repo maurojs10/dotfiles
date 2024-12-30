@@ -124,8 +124,10 @@ if ! command -v gh &> /dev/null; then
   brew install gh
 fi
 
-echo -e "\n * * Authenticate with GitHub * * \n"
-gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"
+if ! gh auth status &> /dev/null; then
+  echo -e "\n * * Authenticate with GitHub * * \n"
+  gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"
+fi
 
 echo -e "\n * * Add SSH key to GitHub for authentication * * \n"
 gh ssh-key add '{{ .ssh.publickey }}' --type authentication
