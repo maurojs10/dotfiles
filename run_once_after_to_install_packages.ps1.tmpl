@@ -5,8 +5,8 @@ Write-Output "`n * * Set PowerShell execution policy for scripts * * `n"
 Set-ExecutionPolicy RemoteSigned -Scope Process -Force
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 
-If (!(Test-Path $PROFILE)) { 
-  If (!(Test-Path (Split-Path -Path $PROFILE))) { 
+if (!(Test-Path $PROFILE)) { 
+  if (!(Test-Path (Split-Path -Path $PROFILE))) { 
     Write-Output "`n * * Create PowerShell profile folder * * `n"
     New-Item -Path (Split-Path -Path $PROFILE) -ItemType Directory | Out-Null 
   }
@@ -34,8 +34,8 @@ choco feature enable -n allowGlobalConfirmation
 Write-Output "`n * * Configure Chocolatey to use installation arguments for upgrades * * `n"
 choco feature enable -n useRememberedArgumentsForUpgrades
 
-If (!(Test-Path '{{ .ssh.keyfile }}')) {
-  If (!(Test-Path (Split-Path -Path '{{ .ssh.keyfile }}'))) { 
+if (!(Test-Path '{{ .ssh.keyfile }}')) {
+  if (!(Test-Path (Split-Path -Path '{{ .ssh.keyfile }}'))) { 
     Write-Output "`n * * Create SSH folder * * `n"
     New-Item -Path (Split-Path -Path '{{ .ssh.keyfile }}') -ItemType Directory | Out-Null
   }
@@ -86,12 +86,12 @@ if (-not (Get-Command starship -ErrorAction SilentlyContinue)) {
   choco install starship
 }
 
-If (!(Test-Path "$env:USERPROFILE\source")) {
+if (!(Test-Path "$env:USERPROFILE\source")) {
   Write-Output "`n * * Create folder for source code subfolders * * `n"
   New-Item -Path "$env:USERPROFILE\source" -ItemType Directory | Out-Null
 }
 
-If (!(Test-Path "$env:USERPROFILE\source\repos")) {
+if (!(Test-Path "$env:USERPROFILE\source\repos")) {
   Write-Output "`n * * Create subfolder for source code repositories * * `n"
   New-Item -Path "$env:USERPROFILE\source\repos" -ItemType Directory | Out-Null
 }
