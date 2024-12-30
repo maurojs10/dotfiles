@@ -67,8 +67,10 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
-Write-Output "`n * * Authenticate with GitHub * * `n"
-gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"
+gh auth status -h github.com | Out-Null ; if ($LASTEXITCODE -ne 0) {
+  Write-Output "`n * * Authenticate with GitHub * * `n"
+  gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"
+}
 
 Write-Output "`n * * Add SSH key to GitHub for authentication * * `n"
 gh ssh-key add '{{ .ssh.publickey }}' --type authentication
