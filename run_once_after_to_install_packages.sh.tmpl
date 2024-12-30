@@ -1,5 +1,5 @@
 {{ if eq .chezmoi.os "linux" -}}
-#!/bin/dash
+#!/bin/bash
 
 if [ ! -e '{{ .ssh.keyfile }}' ]; then
 {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
