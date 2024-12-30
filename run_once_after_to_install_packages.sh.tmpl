@@ -57,6 +57,7 @@ if [ ! -e ~/.local/share/fonts/CaskaydiaMonoNerdFont-Regular.ttf ]; then
   echo -e "\n * * Install Nerd Fonts CaskaydiaMono * * \n"
   mkdir -p ~/.local/share/fonts
   chmod 755 ~/.local/share/fonts
+  type -p unzip >/dev/null || (sudo apt update && sudo apt install unzip -y)
   curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/CascadiaMono.zip -o ~/.local/share/fonts/CascadiaMono.zip
   unzip -o ~/.local/share/fonts/CascadiaMono.zip 'CaskaydiaMonoNerdFont*.ttf' -d ~/.local/share/fonts
   rm -f ~/.local/share/fonts/CascadiaMono.zip
