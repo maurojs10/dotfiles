@@ -3,8 +3,8 @@
 
 if [ ! -e '{{ .ssh.keyfile }}' ]; then
 {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-  echo "\n * * Create symlink for SSH folder * * \n"
   if [ ! -e ~/.ssh ]; then
+    echo "\n * * Create symlink for SSH folder * * \n"
     ln -s "$USERPROFILE/.ssh" ~/.ssh
     chmod 700 ~/.ssh
     chmod 600 ~/.ssh/*
@@ -73,21 +73,19 @@ if ! grep -Fxq 'eval "$(starship init bash)"' ~/.bashrc; then
   echo 'eval "$(starship init bash)"' >> ~/.bashrc
 fi
 
-echo "\n * * Finished installing packages * * \n"
-
 {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-echo "\n * * Create symlink for source code subfolders * * \n"
 if [ ! -e ~/source ]; then
+  echo "\n * * Create symlink for source code subfolders * * \n"
   ln -s "$USERPROFILE/source" ~/source
 fi
 {{ else }}
-echo "\n * * Create folder for source code subfolders * * \n"
 if [ ! -e ~/source ]; then
+  echo "\n * * Create folder for source code subfolders * * \n"
   mkdir -p ~/source
 fi
 
-echo "\n * * Create subfolder for source code repositories * * \n"
 if [ ! -e ~/source/repos ]; then
+  echo "\n * * Create subfolder for source code repositories * * \n"
   mkdir -p ~/source/repos
 fi
 {{ end }}
@@ -130,15 +128,13 @@ gh ssh-key add '{{ .ssh.publickey }}' --type authentication
 echo "\n * * Add SSH key to GitHub for signing * * \n"
 gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
-echo "\n * * Finished installing packages * * \n"
-
-echo "\n * * Create folder for source code subfolders * * \n"
 if [ ! -e ~/source ]; then
+  echo "\n * * Create folder for source code subfolders * * \n"
   mkdir -p ~/source
 fi
 
-echo "\n * * Create subfolder for source code repositories * * \n"
 if [ ! -e ~/source/repos ]; then
+  echo "\n * * Create subfolder for source code repositories * * \n"
   mkdir -p ~/source/repos
 fi
 

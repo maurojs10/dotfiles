@@ -5,11 +5,16 @@ Write-Output "`n * * Set PowerShell execution policy for scripts * * `n"
 Set-ExecutionPolicy RemoteSigned -Scope Process -Force
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 
-Write-Output "`n * * Add PowerShell profile script * * `n"
-If (!(Test-Path (Split-Path -Path $PROFILE))) { New-Item -Path (Split-Path -Path $PROFILE) -ItemType Directory | Out-Null }
-If (!(Test-Path $PROFILE)) { New-Item -Path $PROFILE -ItemType File | Out-Null }
+If (!(Test-Path $PROFILE)) { 
+  If (!(Test-Path (Split-Path -Path $PROFILE))) { 
+    Write-Output "`n * * Create PowerShell profile folder * * `n"
+    New-Item -Path (Split-Path -Path $PROFILE) -ItemType Directory | Out-Null 
+  }
+  
+  Write-Output "`n * * Add PowerShell profile script * * `n"
+  New-Item -Path $PROFILE -ItemType File | Out-Null 
+}
 
-Write-Output "`n * * Configure Chocolatey in PowerShell profile script * * `n"
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 $ChocolateyProfileInstall = @'
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
@@ -18,6 +23,7 @@ if (Test-Path $ChocolateyProfile) {
 }
 '@
 if (!(Select-String $PROFILE -Pattern '$ChocolateyProfile' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure Chocolatey in PowerShell profile script * * `n"
   $ChocolateyProfileInstall | Out-File $PROFILE -Append -Encoding utf8
   Import-Module $ChocolateyProfile
 }
@@ -80,15 +86,13 @@ if (-not (Get-Command starship -ErrorAction SilentlyContinue)) {
   choco install starship
 }
 
-Write-Output "`n * * Finished installing packages * * `n"
-
-Write-Output "`n * * Create folder for source code subfolders * * `n"
 If (!(Test-Path "$env:USERPROFILE\source")) {
+  Write-Output "`n * * Create folder for source code subfolders * * `n"
   New-Item -Path "$env:USERPROFILE\source" -ItemType Directory | Out-Null
 }
 
-Write-Output "`n * * Create subfolder for source code repositories * * `n"
 If (!(Test-Path "$env:USERPROFILE\source\repos")) {
+  Write-Output "`n * * Create subfolder for source code repositories * * `n"
   New-Item -Path "$env:USERPROFILE\source\repos" -ItemType Directory | Out-Null
 }
 
