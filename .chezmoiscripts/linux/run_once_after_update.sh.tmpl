@@ -1,7 +1,6 @@
-{{ if eq .chezmoi.os "linux" -}}
 #!/bin/bash
 
-{{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+# {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 if [ ! -e '{{ .ssh.keyfile }}' ]; then
   if [ ! -e ~/.ssh ] && [ -e "$USERPROFILE/.ssh" ]; then
     echo -e "\n * * Create symlink for SSH folder * * \n"
@@ -10,12 +9,12 @@ if [ ! -e '{{ .ssh.keyfile }}' ]; then
     chmod 600 ~/.ssh/*
   fi
 fi
-{{ else }}
+# {{ else }}
 if [ ! -e '{{ .ssh.keyfile }}' ]; then
   echo -e "\n * * Generate SSH key * * \n"
   ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname | lower }}' -N ''
 fi
-{{ end }}
+# {{ end }}
 
 if ! command -v git &> /dev/null; then
   echo -e "\n * * Install Git * * \n"
@@ -29,12 +28,12 @@ if ! command -v micro &> /dev/null; then
   sudo apt install micro -y
 fi
 
-{{ if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+# {{ if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 if ! command -v code &> /dev/null; then
   echo -e "\n * * Install Visual Studio Code * * \n"
   sudo snap install code --classic
 fi
-{{ end }}
+# {{ end }}
 
 if ! command -v gh &> /dev/null; then
   echo -e "\n * * Install GitHub CLI * * \n"
@@ -73,17 +72,18 @@ if ! command -v starship &> /dev/null; then
   curl -sS https://starship.rs/install.sh | sh -s -- --yes
 fi
 
+# shellcheck disable=SC2016
 if ! grep -Fxq 'eval "$(starship init bash)"' ~/.bashrc; then
   echo -e "\n * * Add Starship to bash configuration * * \n"
   echo 'eval "$(starship init bash)"' >> ~/.bashrc
 fi
 
-{{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+# {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 if [ ! -e ~/source ] && [ -e "$USERPROFILE/source" ]; then
   echo -e "\n * * Create symlink for source code subfolders * * \n"
   ln -s "$USERPROFILE/source" ~/source
 fi
-{{ else }}
+# {{ else }}
 if [ ! -e ~/source ]; then
   echo -e "\n * * Create folder for source code subfolders * * \n"
   mkdir -p ~/source
@@ -93,57 +93,6 @@ if [ ! -e ~/source/repos ]; then
   echo -e "\n * * Create subfolder for source code repositories * * \n"
   mkdir -p ~/source/repos
 fi
-{{ end }}
+# {{ end }}
 
 exit 0
-{{ else if eq .chezmoi.os "darwin" -}}
-#!/bin/zsh
-
-if [ ! -e '{{ .ssh.keyfile }}' ]; then
-  echo -e "\n * * Generate SSH key * * \n"
-  ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname | lower }}' -N ''
-fi
-
-if ! command -v git &> /dev/null; then
-  echo -e "\n * * Install Git * * \n"
-  brew install git
-fi
-
-if ! command -v micro &> /dev/null; then
-  echo -e "\n * * Install micro * * \n"
-  brew install micro
-fi
-
-if ! command -v code &> /dev/null; then
-  echo -e "\n * * Install Visual Studio Code * * \n"
-  brew install --cask visual-studio-code
-fi
-
-if ! command -v gh &> /dev/null; then
-  echo -e "\n * * Install GitHub CLI * * \n"
-  brew install gh
-fi
-
-if ! gh auth status &> /dev/null; then
-  echo -e "\n * * Authenticate with GitHub * * \n"
-  gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"
-fi
-
-echo -e "\n * * Add SSH key to GitHub for authentication * * \n"
-gh ssh-key add '{{ .ssh.publickey }}' --type authentication
-
-echo -e "\n * * Add SSH key to GitHub for signing * * \n"
-gh ssh-key add '{{ .ssh.publickey }}' --type signing
-
-if [ ! -e ~/source ]; then
-  echo -e "\n * * Create folder for source code subfolders * * \n"
-  mkdir -p ~/source
-fi
-
-if [ ! -e ~/source/repos ]; then
-  echo -e "\n * * Create subfolder for source code repositories * * \n"
-  mkdir -p ~/source/repos
-fi
-
-exit 0
-{{ end -}}
