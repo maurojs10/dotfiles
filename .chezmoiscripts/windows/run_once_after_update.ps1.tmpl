@@ -77,6 +77,10 @@ gh ssh-key add '{{ .ssh.publickey }}' --type authentication
 Write-Output "`n * * Add SSH key to GitHub for signing * * `n"
 gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
+Write-Output "`n * * Update allowed signers from GitHub * * `n"
+$GH_USER = (gh api user --jq '.login')
+gh api "users/$GH_USER/ssh_signing_keys" --paginate --jq '.[].key' | Out-File '{{ .ssh.allowedSigners }}' -Encoding utf8
+
 if (!(Test-Path "$env:SystemRoot\Fonts\CaskaydiaMonoNerdFont-Regular.ttf")) {
   Write-Output "`n * * Install Nerd Fonts CaskaydiaMono * * `n"
   choco install nerd-fonts-cascadiamono

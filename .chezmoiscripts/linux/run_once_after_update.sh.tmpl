@@ -56,6 +56,10 @@ gh ssh-key add '{{ .ssh.publickey }}' --type authentication
 echo -e "\n * * Add SSH key to GitHub for signing * * \n"
 gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
+echo -e "\n * * Update allowed signers from GitHub * * \n"
+GH_USER=$(gh api user --jq '.login')
+gh api "users/$GH_USER/ssh_signing_keys" --paginate --jq '.[].key' > '{{ .ssh.allowedSigners }}'
+
 if [ ! -e ~/.local/share/fonts/CaskaydiaMonoNerdFont-Regular.ttf ]; then
   echo -e "\n * * Install Nerd Fonts CaskaydiaMono * * \n"
   mkdir -p ~/.local/share/fonts

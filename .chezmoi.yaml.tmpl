@@ -6,7 +6,7 @@ data:
     keytype: ed25519
     keyfile: '{{ .chezmoi.homeDir }}/.ssh/id_ed25519'
     publickey: '{{ .chezmoi.homeDir }}/.ssh/id_ed25519.pub'
-    allowedSigners: '{{ .chezmoi.homeDir }}/allowed_signers'
+    allowedSigners: '{{ .chezmoi.homeDir }}/.ssh/allowed_signers'
 cd:
   command: '{{ eq .chezmoi.os "windows" | ternary "powershell" "null" }}'
 git:
