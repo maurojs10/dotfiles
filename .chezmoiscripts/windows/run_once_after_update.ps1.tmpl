@@ -4,14 +4,14 @@ Write-Output "`n * * Set PowerShell execution policy for scripts * * `n"
 Set-ExecutionPolicy RemoteSigned -Scope Process -Force
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 
-if (!(Test-Path $PROFILE)) { 
-  if (!(Test-Path (Split-Path -Path $PROFILE))) { 
+if (!(Test-Path $PROFILE)) {
+  if (!(Test-Path (Split-Path -Path $PROFILE))) {
     Write-Output "`n * * Create PowerShell profile folder * * `n"
-    New-Item -Path (Split-Path -Path $PROFILE) -ItemType Directory | Out-Null 
+    New-Item -Path (Split-Path -Path $PROFILE) -ItemType Directory | Out-Null
   }
-  
+
   Write-Output "`n * * Add PowerShell profile script * * `n"
-  New-Item -Path $PROFILE -ItemType File | Out-Null 
+  New-Item -Path $PROFILE -ItemType File | Out-Null
 }
 
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
@@ -34,7 +34,7 @@ Write-Output "`n * * Configure Chocolatey to use installation arguments for upgr
 choco feature enable -n useRememberedArgumentsForUpgrades
 
 if (!(Test-Path '{{ .ssh.keyfile }}')) {
-  if (!(Test-Path (Split-Path -Path '{{ .ssh.keyfile }}'))) { 
+  if (!(Test-Path (Split-Path -Path '{{ .ssh.keyfile }}'))) {
     Write-Output "`n * * Create SSH folder * * `n"
     New-Item -Path (Split-Path -Path '{{ .ssh.keyfile }}') -ItemType Directory | Out-Null
   }
