@@ -7,8 +7,6 @@ data:
     keyfile: '{{ .chezmoi.homeDir }}/.ssh/id_ed25519'
     publickey: '{{ .chezmoi.homeDir }}/.ssh/id_ed25519.pub'
     allowedSigners: '{{ .chezmoi.homeDir }}/.ssh/allowed_signers'
-cd:
-  command: '{{ eq .chezmoi.os "windows" | ternary "powershell" "null" }}'
 git:
   autoAdd: true
   autoCommit: true
@@ -19,3 +17,8 @@ interpreters:
     args:
       - -NoLogo
       - -NoProfile
+
+# Extra settings {{- if eq .chezmoi.os "windows" }}
+cd:
+  command: powershell
+# End of extra settings {{- end }}
