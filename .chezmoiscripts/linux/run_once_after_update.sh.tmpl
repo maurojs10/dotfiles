@@ -99,4 +99,11 @@ if [ ! -e ~/source/repos ]; then
 fi
 # {{ end }}
 
+# {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+if [ ! -e ~/.aws ] && [ -e "$USERPROFILE/.aws" ]; then
+  echo -e "\n * * Create symlink for AWS folder * * \n"
+  ln -s "$USERPROFILE/.aws" ~/.aws
+fi
+# {{ end }}
+
 exit 0
