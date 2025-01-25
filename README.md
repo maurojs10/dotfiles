@@ -41,13 +41,21 @@ A collection of my personal configuration files for various tools that I use.
 
 1. Open [Terminal](https://ubuntu.com/tutorials/command-line-for-beginners#3-opening-a-terminal).
 
-2. Install [chezmoi](https://www.chezmoi.io) via [Snap](https://snapcraft.io/chezmoi):
+2. Ensure Ubuntu is updated:
+
+   ```console
+   sudo apt update \
+   && sudo apt upgrade -y \
+   && sudo apt autoremove -y
+   ```
+
+3. Install [chezmoi](https://www.chezmoi.io) via [Snap](https://snapcraft.io/chezmoi):
 
    ```console
    sudo snap install chezmoi --classic
    ```
 
-3. Initialize chezmoi and apply the configurations:
+4. Initialize chezmoi and apply the configurations:
 
    ```console
    chezmoi init --apply maurojs10
