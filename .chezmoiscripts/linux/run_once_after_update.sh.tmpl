@@ -16,8 +16,15 @@ if [ ! -e '{{ .ssh.keyfile }}' ]; then
 fi
 # {{ end }}
 
+if dpkg --no-pager --list | grep -q '^ii  git '; then
+  if ! dpkg-query --show --showformat='${Version}' git | grep -q 'ppa'; then
+    echo -e "\n * * Uninstall Git from default repository * * \n"
+    sudo apt remove git -y
+  fi
+fi
+
 if ! command -v git &> /dev/null; then
-  echo -e "\n * * Install Git * * \n"
+  echo -e "\n * * Install Git from PPA repository * * \n"
   sudo add-apt-repository ppa:git-core/ppa -y \
   && sudo apt update \
   && sudo apt install git -y
