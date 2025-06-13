@@ -46,7 +46,7 @@
 	# Custom
 	summary2 = "!f() { onefetch --show-logo=never $@; }; f"
 	pab = push origin : --follow-tags --verbose
-	pufo = push --force origin --verbose
+	pufo = push --force-with-lease origin --verbose
 	log-since-last-merge = "!f() { git log `git log --no-show-signature --pretty=format:\"%H\" --merges -n 1`..HEAD $@; }; f"
 	absorb-since-last-merge = "!f() { git absorb --base `git log --no-show-signature --pretty=format:\"%H\" --merges -n 1` $@; }; f"
 	rebase-since-last-merge = "!f() { git rebase --interactive `git log --no-show-signature --pretty=format:\"%H\" --merges -n 1` $@; }; f"
