@@ -199,4 +199,22 @@ if (!(Get-Command svgo.cmd -ErrorAction SilentlyContinue)) {
   npm install svgo --global
 }
 
+if (!(Get-Command msys2 -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install MSYS2 * * `n"
+  sudo choco install msys2 --params '/NoUpdate' -y
+  refreshenv
+}
+
+if (!(Get-Command ruby -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Ruby * * `n"
+  sudo choco install ruby -y
+  refreshenv
+  sudo ridk install 2 3
+}
+
+if (!(Get-Command bootstrap-email.bat -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Bootstrap Email * * `n"
+  sudo gem install bootstrap-email
+}
+
 exit 0
