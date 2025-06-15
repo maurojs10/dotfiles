@@ -163,4 +163,9 @@ if (!(Test-Path "$env:USERPROFILE\source\repos")) {
 Write-Output "`n * * Set environment variables for WSL * * `n"
 setx WSLENV USERPROFILE/up
 
+if (!(Get-PackageProvider NuGet -ListAvailable -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install NuGet PowerShell package provider * * `n"
+  sudo Install-PackageProvider NuGet -Force
+}
+
 exit 0
