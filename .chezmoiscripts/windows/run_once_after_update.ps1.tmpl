@@ -48,6 +48,25 @@ if (!(Test-Path 'C:\Tools')) {
   New-Item -Path 'C:\Tools' -ItemType Directory | Out-Null
 }
 
+if (!(Get-Command gsudo -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install gsudo * * `n"
+  choco install gsudo -y
+  refreshenv
+}
+
+Write-Output "`n * * Start gsudo cache for the current session * * `n"
+gsudo cache on --duration -1
+
+if ((gsudo config CacheMode) -ne 'CacheMode = "Auto"') {
+  Write-Output "`n * * Configure gsudo cache mode * * `n"
+  gsudo config CacheMode Auto
+}
+
+if ((gsudo config PathPrecedence) -ne 'PathPrecedence = "True"') {
+  Write-Output "`n * * Configure gsudo path precedence * * `n"
+  gsudo config PathPrecedence True
+}
+
 Write-Output "`n * * Configure Chocolatey to bypass confirmations * * `n"
 choco feature enable -n allowGlobalConfirmation
 
