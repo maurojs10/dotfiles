@@ -49,24 +49,24 @@ if (!(Test-Path '{{ .ssh.keyfile }}')) {
   ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname | lower }}' -N '""'
 }
 
-if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+if (!(Get-Command git -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install Git * * `n"
   choco install git
   refreshenv
 }
 
-if (-not (Get-Command micro -ErrorAction SilentlyContinue)) {
+if (!(Get-Command micro -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install micro * * `n"
   choco install micro
 }
 
-if (-not (Get-Command code -ErrorAction SilentlyContinue)) {
+if (!(Get-Command code -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install Visual Studio Code * * `n"
   choco install vscode
   refreshenv
 }
 
-if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
+if (!(Get-Command gh -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install GitHub CLI * * `n"
   choco install gh
   refreshenv
@@ -92,7 +92,7 @@ if (!(Test-Path "$env:SystemRoot\Fonts\CaskaydiaMonoNerdFont-Regular.ttf")) {
   choco install nerd-fonts-cascadiamono
 }
 
-if (-not (Get-Command starship -ErrorAction SilentlyContinue)) {
+if (!(Get-Command starship -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install Starship * * `n"
   choco install starship
 }
