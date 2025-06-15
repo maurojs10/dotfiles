@@ -43,6 +43,11 @@ if (Test-Path $ChocolateyInstaller) {
   Import-Module $ChocolateyInstaller
 }
 
+if (!(Test-Path 'C:\Tools')) {
+  Write-Output "`n * * Create folder for tools installed by Chocolatey * * `n"
+  New-Item -Path 'C:\Tools' -ItemType Directory | Out-Null
+}
+
 Write-Output "`n * * Configure Chocolatey to bypass confirmations * * `n"
 choco feature enable -n allowGlobalConfirmation
 
