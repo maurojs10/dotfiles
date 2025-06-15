@@ -168,4 +168,9 @@ if (!(Get-PackageProvider NuGet -ListAvailable -ErrorAction SilentlyContinue)) {
   sudo Install-PackageProvider NuGet -Force
 }
 
+if (!(Get-Module PSScriptAnalyzer -ListAvailable)) {
+  Write-Output "`n * * Install PSScriptAnalyzer PowerShell module * * `n"
+  sudo Install-Module PSScriptAnalyzer -Force
+}
+
 exit 0
