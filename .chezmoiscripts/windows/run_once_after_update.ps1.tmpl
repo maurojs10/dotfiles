@@ -184,4 +184,9 @@ if (!(Get-Command node -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
+if (!(Get-Command eclint.cmd -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install ECLint * * `n"
+  npm install eclint --global
+}
+
 exit 0
