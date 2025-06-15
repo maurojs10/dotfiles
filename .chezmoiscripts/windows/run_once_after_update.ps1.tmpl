@@ -178,4 +178,10 @@ if (!(Get-Command 7z -ErrorAction SilentlyContinue)) {
   sudo choco install 7zip -y
 }
 
+if (!(Get-Command node -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Node.js * * `n"
+  sudo choco install nodejs-lts -y
+  refreshenv
+}
+
 exit 0
