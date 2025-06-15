@@ -173,4 +173,9 @@ if (!(Get-Module PSScriptAnalyzer -ListAvailable)) {
   sudo Install-Module PSScriptAnalyzer -Force
 }
 
+if (!(Get-Command 7z -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install 7-Zip * * `n"
+  sudo choco install 7zip -y
+}
+
 exit 0
