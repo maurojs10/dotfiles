@@ -97,6 +97,17 @@ if (!(git extras --version)) {
   Remove-Item $path -Force -Recurse
 }
 
+if (!(Get-Command TortoiseGitProc -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install TortoiseGit * * `n"
+  sudo choco install tortoisegit -y
+  refreshenv
+}
+
+if ((Get-ItemProperty -Path HKCU:\SOFTWARE\TortoiseGit -ErrorAction SilentlyContinue).Win8SpellChecker -ne 1) {
+  Write-Output "`n * * Configure TortoiseGit spell checker * * `n"
+  Set-ItemProperty -Path HKCU:\SOFTWARE\TortoiseGit -Name Win8SpellChecker -Value 1
+}
+
 if (!(Get-Command micro -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install micro * * `n"
   sudo choco install micro -y
