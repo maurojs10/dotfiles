@@ -86,6 +86,17 @@ if (!(Get-Command git -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
+if (!(git extras --version)) {
+  Write-Output "`n * * Install Git Extras * * `n"
+  $path = Join-Path $env:TEMP (New-Guid)
+  git clone 'https://github.com/tj/git-extras.git' $path
+  Push-Location $path
+  git checkout (git describe --tags (git rev-list --tags --max-count=1))
+  sudo .\install.cmd
+  Pop-Location
+  Remove-Item $path -Force -Recurse
+}
+
 if (!(Get-Command micro -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install micro * * `n"
   sudo choco install micro -y
