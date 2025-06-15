@@ -15,21 +15,33 @@ A collection of my personal configuration files for various tools that I use.
 <details>
 <summary><b>Installation on Windows</b></summary>
 
-1. Start [PowerShell as administrator](https://learn.microsoft.com/powershell/scripting/windows-powershell/starting-windows-powershell#with-administrative-privileges-run-as-administrator).
+1. Start [PowerShell](https://learn.microsoft.com/powershell/scripting/windows-powershell/starting-windows-powershell).
 
-2. Install [Chocolatey](https://chocolatey.org):
-
-   ```console
-   Set-ExecutionPolicy Bypass Process -Force; irm https://community.chocolatey.org/install.ps1 | iex
-   ```
-
-3. Install [chezmoi](https://www.chezmoi.io) via [Chocolatey](https://community.chocolatey.org/packages/chezmoi):
+2. Install [Chocolatey](https://chocolatey.org) as administrator:
 
    ```console
-   choco install chezmoi -y
+   Start-Process powershell '-NoProfile -ExecutionPolicy Bypass -Command "irm https://community.chocolatey.org/install.ps1 | iex"' -Verb RunAs -Wait
    ```
 
-4. Initialize chezmoi and apply the configurations:
+3. Set PowerShell execution policy:
+
+   ```console
+   Set-ExecutionPolicy RemoteSigned Process -Force
+   ```
+
+3. Refresh current session environment:
+
+   ```console
+   Import-Module "$env:ProgramData\chocolatey\helpers\chocolateyInstaller.psm1"; refreshenv
+   ```
+
+4. Install [chezmoi](https://www.chezmoi.io) via [Chocolatey](https://community.chocolatey.org/packages/chezmoi):
+
+   ```console
+   Start-Process choco 'install chezmoi -y' -Verb RunAs -Wait
+   ```
+
+6. Initialize chezmoi and apply the configurations:
 
    ```console
    chezmoi init --apply maurojs10
