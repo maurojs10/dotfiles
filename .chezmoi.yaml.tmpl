@@ -1,7 +1,7 @@
 data:
   git:
-    name: '{{ promptStringOnce . "git.name" "What is your Git name" }}'
-    email: '{{ promptStringOnce . "git.email" "What is your Git email" }}'
+    name: '{{ promptStringOnce . "git.name" "What is your Git name" "Mauro José da Silva" }}'
+    email: '{{ promptStringOnce . "git.email" "What is your Git email" "maurojs10@gmail.com" }}'
   ssh:
     keytype: ed25519
     keyfile: '{{ .chezmoi.homeDir }}/.ssh/id_ed25519'
