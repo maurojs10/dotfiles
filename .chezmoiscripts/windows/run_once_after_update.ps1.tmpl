@@ -312,4 +312,10 @@ if ([string]::IsNullOrWhiteSpace($path) -or !(Test-Path $path)) {
   Remove-Item "$env:USERPROFILE\Downloads\MicrosoftVisualStudio2022InstallerProjects.vsix" -Force
 }
 
+$path = "${env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools"
+if (!(Test-Path $path)) {
+  Write-Output "`n * * Install .NET Framework Developer Pack * * `n"
+  sudo choco install netfx-4.8-devpack -y
+}
+
 exit 0
