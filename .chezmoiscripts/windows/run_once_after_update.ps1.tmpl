@@ -366,4 +366,10 @@ if (!($env:Path -split ';' -contains $path)) {
   Install-ChocolateyPath $path -PathType User
 }
 
+$path = "$env:ProgramFiles\Fortinet\FortiClient\FortiClient.exe"
+if (!(Test-Path $path)) {
+  Write-Output "`n * * Install FortiClient VPN * * `n"
+  sudo choco install forticlientvpn -y
+}
+
 exit 0
