@@ -217,4 +217,25 @@ if (!(Get-Command bootstrap-email.bat -ErrorAction SilentlyContinue)) {
   sudo gem install bootstrap-email
 }
 
+if (Test-Path "$env:LOCALAPPDATA\Microsoft\WindowsApps\python.exe") {
+  Write-Output "`n * * Disable Python App Execution Alias (1) * * `n"
+  Remove-Item "$env:LOCALAPPDATA\Microsoft\WindowsApps\python.exe" -Force
+}
+
+if (Test-Path "$env:LOCALAPPDATA\Microsoft\WindowsApps\python3.exe") {
+  Write-Output "`n * * Disable Python App Execution Alias (2) * * `n"
+  Remove-Item "$env:LOCALAPPDATA\Microsoft\WindowsApps\python3.exe" -Force
+}
+
+if (!(Get-Command python -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Python * * `n"
+  sudo choco install python310 --params '/InstallDir:C:\Python310' -y
+  refreshenv
+}
+
+if (!(Get-Command mssql-scripter.bat -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install MSSQL Scripter * * `n"
+  sudo pip install mssql-scripter
+}
+
 exit 0
