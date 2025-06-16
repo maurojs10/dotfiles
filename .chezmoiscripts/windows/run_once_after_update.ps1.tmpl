@@ -372,4 +372,21 @@ if (!(Test-Path $path)) {
   sudo choco install forticlientvpn -y
 }
 
+if (!(Get-Module PendingReboot -ListAvailable)) {
+  Write-Output "`n * * Install PendingReboot PowerShell module * * `n"
+  sudo Install-Module PendingReboot -Force
+}
+
+if ((Test-PendingReboot -SkipConfigurationManagerClientCheck).IsRebootPending) {
+  Write-Output "`n * * Reboot required * * `n"
+  Write-Output "Press ENTER to reboot now or any other key to skip."
+  $key = $host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+  if ($key.VirtualKeyCode -eq 13) {
+    Write-Output "Rebooting now..."
+    Restart-Computer -Force
+  } else {
+    Write-Output "Please reboot as soon as possible to complete the installations."
+  }
+}
+
 exit 0
