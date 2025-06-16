@@ -253,4 +253,9 @@ if (!(Get-Command pngquant -ErrorAction SilentlyContinue)) {
   sudo choco install pngquant -y
 }
 
+if (!(Get-Command nuget -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install NuGet CLI * * `n"
+  sudo choco install nuget.commandline -y
+}
+
 exit 0
