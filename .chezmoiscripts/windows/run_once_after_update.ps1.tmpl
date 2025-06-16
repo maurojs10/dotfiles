@@ -258,4 +258,9 @@ if (!(Get-Command nuget -ErrorAction SilentlyContinue)) {
   sudo choco install nuget.commandline -y
 }
 
+if (!(Get-Command vswhere -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Visual Studio Locator * * `n"
+  sudo choco install vswhere -y
+}
+
 exit 0
