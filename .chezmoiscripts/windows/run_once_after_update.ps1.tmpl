@@ -243,4 +243,9 @@ if (!(Get-Command sed -ErrorAction SilentlyContinue)) {
   sudo choco install sed -y
 }
 
+if (!(Get-Command magick -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install ImageMagick * * `n"
+  sudo choco install imagemagick -y
+}
+
 exit 0
