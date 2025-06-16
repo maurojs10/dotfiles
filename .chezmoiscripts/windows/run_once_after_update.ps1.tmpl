@@ -263,4 +263,53 @@ if (!(Get-Command vswhere -ErrorAction SilentlyContinue)) {
   sudo choco install vswhere -y
 }
 
+$path = (vswhere -latest -find 'Common7\**\VsDevCmd.bat')
+if ([string]::IsNullOrWhiteSpace($path) -or !(Test-Path $path)) {
+  Write-Output "`n * * Install Visual Studio * * `n"
+  sudo choco install visualstudio2022community -y
+  refreshenv
+}
+
+$path = (vswhere -latest -requires Microsoft.VisualStudio.Workload.ManagedDesktop -property installationPath)
+if ([string]::IsNullOrWhiteSpace($path) -or !(Test-Path $path)) {
+  Write-Output "`n * * Install Visual Studio Desktop Development workload * * `n"
+  sudo choco install visualstudio2022-workload-manageddesktop -y
+}
+
+$path = (vswhere -latest -requires Microsoft.VisualStudio.Workload.NetWeb -property installationPath)
+if ([string]::IsNullOrWhiteSpace($path) -or !(Test-Path $path)) {
+  Write-Output "`n * * Install Visual Studio Web Development workload * * `n"
+  sudo choco install visualstudio2022-workload-netweb -y
+}
+
+$path = (vswhere -latest -find 'Common7\**\Mvc4')
+if ([string]::IsNullOrWhiteSpace($path) -or !(Test-Path $path)) {
+  Write-Output "`n * * Install Visual Studio MVC 4 component * * `n"
+  $installationPath = (vswhere -latest -property installationPath)
+  sudo Start-Process `
+    -FilePath "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\setup.exe" `
+    -ArgumentList "modify --installPath """"$installationPath"""" --add Microsoft.VisualStudio.Web.Mvc4.ComponentGroup --quiet --norestart" `
+    -Wait `
+    -NoNewWindow
+}
+
+$path = (vswhere -latest -find 'Common7\**\DisableOutOfProcBuild.exe')
+if ([string]::IsNullOrWhiteSpace($path) -or !(Test-Path $path)) {
+  Write-Output "`n * * Download Visual Studio Installer Projects extension * * `n"
+  Invoke-WebRequest `
+    -Uri 'https://marketplace.visualstudio.com/_apis/public/gallery/publishers/VisualStudioClient/vsextensions/MicrosoftVisualStudio2022InstallerProjects/latest/vspackage' `
+    -OutFile "$env:USERPROFILE\Downloads\MicrosoftVisualStudio2022InstallerProjects.vsix"
+
+  Write-Output "`n * * Install Visual Studio Installer Projects extension * * `n"
+  $installerPath = (vswhere -latest -find 'Common7\**\VSIXInstaller.exe')
+  sudo Start-Process `
+    -FilePath $installerPath `
+    -ArgumentList """""$env:USERPROFILE\Downloads\MicrosoftVisualStudio2022InstallerProjects.vsix"""" /quiet" `
+    -Wait `
+    -NoNewWindow
+
+  Write-Output "`n * * Remove Visual Studio Installer Projects extension downloaded file * * `n"
+  Remove-Item "$env:USERPROFILE\Downloads\MicrosoftVisualStudio2022InstallerProjects.vsix" -Force
+}
+
 exit 0
