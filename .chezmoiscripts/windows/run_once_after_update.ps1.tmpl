@@ -238,4 +238,9 @@ if (!(Get-Command mssql-scripter.bat -ErrorAction SilentlyContinue)) {
   sudo pip install mssql-scripter
 }
 
+if (!(Get-Command sed -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install GNU Sed * * `n"
+  sudo choco install sed -y
+}
+
 exit 0
