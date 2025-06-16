@@ -189,4 +189,9 @@ if (!(Get-Command eclint.cmd -ErrorAction SilentlyContinue)) {
   npm install eclint --global
 }
 
+if (!(Get-Command conventional-changelog.cmd -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Conventional Changelog CLI * * `n"
+  npm install conventional-changelog-cli --global
+}
+
 exit 0
