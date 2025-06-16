@@ -248,4 +248,9 @@ if (!(Get-Command magick -ErrorAction SilentlyContinue)) {
   sudo choco install imagemagick -y
 }
 
+if (!(Get-Command pngquant -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install PNGQuant * * `n"
+  sudo choco install pngquant -y
+}
+
 exit 0
