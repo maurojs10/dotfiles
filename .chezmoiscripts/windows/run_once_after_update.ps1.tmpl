@@ -318,4 +318,52 @@ if (!(Test-Path $path)) {
   sudo choco install netfx-4.8-devpack -y
 }
 
+$path = "${env:ProgramFiles(x86)}\dennisbabkin.com\Script Encoder Plus\screnc.exe"
+if (!(Test-Path $path)) {
+  Write-Output "`n * * Download Script Encoder Plus * * `n"
+  Invoke-WebRequest `
+    -Uri 'https://dennisbabkin.com/php/download.php?go=ScrEnc' `
+    -OutFile "$env:USERPROFILE\Downloads\ScrEnc.zip"
+
+  Write-Output "`n * * Extract Script Encoder Plus * * `n"
+  Expand-Archive `
+    -Path "$env:USERPROFILE\Downloads\ScrEnc.zip" `
+    -DestinationPath "$env:USERPROFILE\Downloads\"
+
+  Write-Output "`n * * Install Script Encoder Plus * * `n"
+  sudo Start-Process `
+    -FilePath "$env:windir\System32\msiexec.exe" `
+    -ArgumentList "/i """"$env:USERPROFILE\Downloads\ScrEnc Encoder 3.0.3.9.msi"""" /qn /norestart" `
+    -Wait `
+    -NoNewWindow
+
+  Write-Output "`n * * Register Script Encoder Plus * * `n"
+  $registrationName = Read-Host 'Enter registration name'
+  $registrationCode = Read-Host 'Enter registration code'
+  Start-Process `
+    -FilePath "${env:ProgramFiles(x86)}\dennisbabkin.com\Script Encoder Plus\screnc.exe" `
+    -ArgumentList "/r=""$registrationName"" /c=""$registrationCode""" `
+    -Wait `
+    -NoNewWindow
+
+  Write-Output "`n * * Remove Script Encoder Plus downloaded file * * `n"
+  Remove-Item "$env:USERPROFILE\Downloads\ScrEnc.zip" -Force
+
+  Write-Output "`n * * Remove Script Encoder Plus extracted files * * `n"
+  Remove-Item "$env:USERPROFILE\Downloads\ScrEnc Encoder 3.0.3.9.msi" -Force
+  Remove-Item "$env:USERPROFILE\Downloads\Info - Encoder.txt" -Force
+}
+
+$path = 'C:\Tools\Invoke-Stealth'
+if (!(Test-Path $path)) {
+  Write-Output "`n * * Install Invoke-Stealth * * `n"
+  git clone 'https://github.com/JoelGMSec/Invoke-Stealth.git' $path
+}
+
+$path = 'C:\Tools\Invoke-Stealth'
+if (!($env:Path -split ';' -contains $path)) {
+  Write-Output "`n * * Add Invoke-Stealth to current user path * * `n"
+  Install-ChocolateyPath $path -PathType User
+}
+
 exit 0
