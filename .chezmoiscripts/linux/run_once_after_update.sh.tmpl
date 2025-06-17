@@ -52,9 +52,9 @@ if ! command -v gh &> /dev/null; then
   && sudo apt install gh -y
 fi
 
-if ! gh auth status &> /dev/null; then
+if ! gh auth status -h github.com &> /dev/null; then
   echo -e "\n * * Authenticate with GitHub * * \n"
-  gh auth login --scopes "admin:public_key admin:ssh_signing_key gist read:org repo"
+  gh auth login -h github.com -p ssh --scopes "admin:public_key admin:ssh_signing_key gist read:org repo" --skip-ssh-key
 fi
 
 echo -e "\n * * Add SSH key to GitHub for authentication * * \n"
