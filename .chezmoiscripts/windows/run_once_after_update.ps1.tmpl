@@ -366,6 +366,29 @@ if (!($env:Path -split ';' -contains $path)) {
   Install-ChocolateyPath $path -PathType User
 }
 
+if (!(Test-Path "$env:ProgramFiles\TidyDesktopMonster")) {
+  Write-Output "`n * * Create Tidy Desktop Monster folder * * `n"
+  sudo New-Item -Path "$env:ProgramFiles\TidyDesktopMonster" -ItemType Directory | Out-Null
+}
+
+if (!(Test-Path "$env:ProgramFiles\TidyDesktopMonster\TidyDesktopMonster.exe")) {
+  Write-Output "`n * * Download Tidy Desktop Monster * * `n"
+  Invoke-WebRequest `
+  -Uri 'https://github.com/mkropat/TidyDesktopMonster/releases/download/v0.4.0/TidyDesktopMonster-0.4.0.zip' `
+  -OutFile "$env:USERPROFILE\Downloads\TidyDesktopMonster.zip"
+
+  Write-Output "`n * * Extract Tidy Desktop Monster * * `n"
+  sudo Expand-Archive `
+    -Path "$env:USERPROFILE\Downloads\TidyDesktopMonster.zip" `
+    -DestinationPath "$env:ProgramFiles\TidyDesktopMonster\"
+
+  Write-Output "`n * * Remove Tidy Desktop Monster downloaded file * * `n"
+  Remove-Item "$env:USERPROFILE\Downloads\TidyDesktopMonster.zip" -Force
+
+  Write-Output "`n * * Execute Tidy Desktop Monster * * `n"
+  Start-Process -FilePath "$env:ProgramFiles\TidyDesktopMonster\TidyDesktopMonster.exe"
+}
+
 $path = "$env:ProgramFiles\Fortinet\FortiClient\FortiClient.exe"
 if (!(Test-Path $path)) {
   Write-Output "`n * * Install FortiClient VPN * * `n"
