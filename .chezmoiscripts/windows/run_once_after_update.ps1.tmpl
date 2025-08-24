@@ -389,6 +389,14 @@ if (!(Test-Path "$env:ProgramFiles\TidyDesktopMonster\TidyDesktopMonster.exe")) 
   Start-Process -FilePath "$env:ProgramFiles\TidyDesktopMonster\TidyDesktopMonster.exe"
 }
 
+$path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"
+$name = "{2cc5ca98-6485-489a-920e-b3e88a6ccce3}"
+if (!(Get-ItemProperty -Path $path -Name $name -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Remove Windows Spotlight 'Learn about this picture' shortcut * * `n"
+  if (!(Test-Path $path)) { New-Item -Path $path -Force | Out-Null }
+  Set-ItemProperty -Path $path -Name $name -Value 1 -Type DWord
+}
+
 $path = "$env:ProgramFiles\Fortinet\FortiClient\FortiClient.exe"
 if (!(Test-Path $path)) {
   Write-Output "`n * * Install FortiClient VPN * * `n"
