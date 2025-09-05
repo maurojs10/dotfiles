@@ -355,15 +355,15 @@ if (!(Test-Path $path)) {
 }
 
 $path = 'C:\Tools\Invoke-Stealth'
-if (!(Test-Path $path)) {
-  Write-Output "`n * * Install Invoke-Stealth * * `n"
-  git clone 'https://github.com/JoelGMSec/Invoke-Stealth.git' $path
+if (Test-Path $path) {
+  Write-Output "`n * * Uninstall Invoke-Stealth * * `n"
+  Remove-Item -Path $path -Recurse -Force
 }
 
 $path = 'C:\Tools\Invoke-Stealth'
-if (!($env:Path -split ';' -contains $path)) {
-  Write-Output "`n * * Add Invoke-Stealth to current user path * * `n"
-  Install-ChocolateyPath $path -PathType User
+if ($env:Path -split ';' -contains $path) {
+  Write-Output "`n * * Remove Invoke-Stealth from current user path * * `n"
+  Uninstall-ChocolateyPath $path -PathType User
 }
 
 if (!(Test-Path "$env:ProgramFiles\TidyDesktopMonster")) {
