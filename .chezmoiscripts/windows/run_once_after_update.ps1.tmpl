@@ -354,18 +354,6 @@ if (!(Test-Path $path)) {
   Remove-Item "$env:USERPROFILE\Downloads\Info - Encoder.txt" -Force
 }
 
-$path = 'C:\Tools\Invoke-Stealth'
-if (Test-Path $path) {
-  Write-Output "`n * * Uninstall Invoke-Stealth * * `n"
-  Remove-Item -Path $path -Recurse -Force
-}
-
-$path = 'C:\Tools\Invoke-Stealth'
-if ($env:Path -split ';' -contains $path) {
-  Write-Output "`n * * Remove Invoke-Stealth from current user path * * `n"
-  Uninstall-ChocolateyPath $path -PathType User
-}
-
 if (!(Test-Path "$env:ProgramFiles\TidyDesktopMonster")) {
   Write-Output "`n * * Create Tidy Desktop Monster folder * * `n"
   sudo New-Item -Path "$env:ProgramFiles\TidyDesktopMonster" -ItemType Directory | Out-Null
