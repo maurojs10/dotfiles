@@ -184,6 +184,11 @@ if (!(Get-Command node -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
+if ((npm config get ignore-scripts --global) -ne "true") {
+  Write-Output "`n * * Configure NPM to Ignore Scripts * * `n"
+  npm config set ignore-scripts true --global
+}
+
 if (!(Get-Command eclint.cmd -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install ECLint * * `n"
   npm install eclint --global
