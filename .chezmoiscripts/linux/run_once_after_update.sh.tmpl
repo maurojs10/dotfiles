@@ -113,4 +113,19 @@ if [ ! -e ~/.aws ] && [ -e "$USERPROFILE/.aws" ]; then
 fi
 # {{ end }}
 
+if dpkg --no-pager --list | grep -q '^ii  nodejs '; then
+  if ! dpkg-query --show --showformat='${Version}' nodejs | grep -q 'nodesource'; then
+    echo -e "\n * * Uninstall Node.js from default repository * * \n"
+    sudo apt remove nodejs -y && sudo apt autoremove -y
+  fi
+fi
+
+if ! command -v node &> /dev/null; then
+  echo -e "\n * * Install Node.js from NodeSource repository * * \n"
+  type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+  curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - \
+  && sudo apt update \
+  && sudo apt install nodejs -y
+fi
+
 exit 0
