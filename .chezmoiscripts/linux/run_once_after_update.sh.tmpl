@@ -128,4 +128,9 @@ if ! command -v node &> /dev/null; then
   && sudo apt install nodejs -y
 fi
 
+if [[ "$(npm config get ignore-scripts --global)" != "true" ]]; then
+  echo -e "\n * * Configure NPM to Ignore Scripts * * \n"
+  sudo npm config set ignore-scripts true --global
+fi
+
 exit 0
