@@ -55,4 +55,9 @@ if ! command -v node &> /dev/null; then
   brew install node@22
 fi
 
+if [[ "$(npm config get ignore-scripts --global)" != "true" ]]; then
+  echo -e "\n * * Configure NPM to Ignore Scripts * * \n"
+  sudo npm config set ignore-scripts true --global
+fi
+
 exit 0
