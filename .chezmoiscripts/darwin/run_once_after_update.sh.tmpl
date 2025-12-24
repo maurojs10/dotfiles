@@ -50,4 +50,9 @@ if [ ! -e ~/source/repos ]; then
   mkdir -p ~/source/repos
 fi
 
+if ! command -v node &> /dev/null; then
+  echo -e "\n * * Install Node.js * * \n"
+  brew install node@22
+fi
+
 exit 0
