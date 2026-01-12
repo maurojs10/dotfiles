@@ -8,6 +8,10 @@ README.md
 .chezmoiscripts/linux/**
 {{ end }}
 
+{{ if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+.ssh/**
+{{ end }}
+
 {{ if ne .chezmoi.os "windows" }}
 .chezmoiscripts/windows/**
 AppData/Roaming/NuGet/nuget.config
