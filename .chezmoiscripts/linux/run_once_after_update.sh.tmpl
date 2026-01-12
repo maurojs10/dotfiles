@@ -12,7 +12,7 @@ fi
 # {{ else }}
 if [ ! -e '{{ .ssh.keyfile }}' ]; then
   echo -e "\n * * Generate SSH key * * \n"
-  ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.hostname | lower }}' -N ''
+  ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.username | lower }}@{{ .chezmoi.hostname | lower }}' -N ''
 fi
 # {{ end }}
 
