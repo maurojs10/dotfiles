@@ -77,7 +77,7 @@ if (!(Test-Path '{{ .ssh.keyfile }}')) {
   }
 
   Write-Output "`n * * Generate SSH key * * `n"
-  ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.username | lower }}@{{ .chezmoi.hostname | lower }}' -N '""'
+  ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.username | lower }}@{{ .chezmoi.hostname | lower }}'
 }
 
 if (!(Get-Command git -ErrorAction SilentlyContinue)) {
