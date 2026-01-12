@@ -20,6 +20,11 @@ if ! command -v code &> /dev/null; then
   brew install --cask visual-studio-code
 fi
 
+if [ ! -d "/Applications/Bitwarden.app" ]; then
+  echo -e "\n * * Install Bitwarden Desktop * * \n"
+  brew install --cask bitwarden
+fi
+
 if ! command -v gh &> /dev/null; then
   echo -e "\n * * Install GitHub CLI * * \n"
   brew install gh
