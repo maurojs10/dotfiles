@@ -8,7 +8,11 @@
 	autocrlf = false
 	editor = micro
 	fscache = true
+	{{- if eq .chezmoi.os "windows" }}
+	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
+	{{- else }}
 	sshCommand = ssh
+	{{- end }}
 [gitflow "hotfix.finish"]
 	sign = true
 [gitflow "release.branch"]
@@ -19,6 +23,11 @@
 	format = ssh
 [gpg "ssh"]
 	allowedSignersFile = {{ .ssh.allowedSigners }}
+	{{- if eq .chezmoi.os "windows" }}
+	program = C:/Windows/System32/OpenSSH/ssh-keygen.exe
+	{{- else }}
+	program = ssh-keygen
+	{{- end }}
 [init]
 	defaultBranch = main
 [log]
