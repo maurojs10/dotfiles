@@ -25,6 +25,11 @@ if [ ! -d "/Applications/Bitwarden.app" ]; then
   brew install --cask bitwarden
 fi
 
+if ! grep -q "SSH_AUTH_SOCK" ~/.zshrc; then
+  echo -e "\n * * Configure SSH agent for Bitwarden * * \n"
+  echo 'export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock' >> ~/.zshrc
+fi
+
 if ! command -v gh &> /dev/null; then
   echo -e "\n * * Install GitHub CLI * * \n"
   brew install gh
