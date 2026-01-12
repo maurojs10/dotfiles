@@ -119,6 +119,12 @@ if (!(Get-Command code -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
+$path = "$env:LOCALAPPDATA\Programs\Bitwarden\Bitwarden.exe"
+if (!(Test-Path $path)) {
+  Write-Output "`n * * Install Bitwarden Desktop * * `n"
+  sudo choco install bitwarden -y
+}
+
 if (!(Get-Command gh -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install GitHub CLI * * `n"
   sudo choco install gh -y
