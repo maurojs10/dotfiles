@@ -42,6 +42,13 @@ if ! command -v code &> /dev/null; then
 fi
 # {{ end }}
 
+# {{ if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+if [ ! -e /snap/bitwarden ]; then
+  echo -e "\n * * Install Bitwarden Desktop * * \n"
+  sudo snap install bitwarden
+fi
+# {{ end }}
+
 if ! command -v gh &> /dev/null; then
   echo -e "\n * * Install GitHub CLI * * \n"
   type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
