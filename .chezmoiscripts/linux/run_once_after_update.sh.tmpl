@@ -57,6 +57,28 @@ if ! grep -q "SSH_AUTH_SOCK" ~/.bashrc; then
 fi
 # {{ end }}
 
+# {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+if ! command -v socat &> /dev/null; then
+  echo -e "\n * * Install socat * * \n"
+  sudo apt install socat -y
+fi
+# {{ end }}
+
+# {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+# shellcheck disable=SC2016
+if ! grep -q "SSH_AUTH_SOCK" ~/.bashrc; then
+  echo -e "\n * * Configure SSH agent for Bitwarden * * \n"
+  {
+    echo 'export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock'
+    echo 'ss -a | grep -q $SSH_AUTH_SOCK'
+    echo 'if [ $? -ne 0 ]; then'
+    echo '    rm -f $SSH_AUTH_SOCK'
+    echo '    ( setsid socat UNIX-LISTEN:$SSH_AUTH_SOCK,fork EXEC:"/mnt/c/ProgramData/chocolatey/bin/npiperelay.exe -ei -s //./pipe/openssh-ssh-agent",nofork & ) >/dev/null 2>&1'
+    echo 'fi'
+  } >> ~/.bashrc
+fi
+# {{ end }}
+
 if ! command -v gh &> /dev/null; then
   echo -e "\n * * Install GitHub CLI * * \n"
   type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)

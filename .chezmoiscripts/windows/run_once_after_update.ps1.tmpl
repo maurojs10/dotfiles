@@ -125,6 +125,11 @@ if (!(Test-Path $path)) {
   sudo choco install bitwarden -y
 }
 
+if (!(Get-Command npiperelay -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install npiperelay * * `n"
+  sudo choco install npiperelay -y
+}
+
 if (!(Get-Command gh -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install GitHub CLI * * `n"
   sudo choco install gh -y
