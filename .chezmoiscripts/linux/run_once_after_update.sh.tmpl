@@ -49,6 +49,14 @@ if [ ! -e /snap/bitwarden ]; then
 fi
 # {{ end }}
 
+# {{ if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+# shellcheck disable=SC2016
+if ! grep -q "SSH_AUTH_SOCK" ~/.bashrc; then
+  echo -e "\n * * Configure SSH agent for Bitwarden * * \n"
+  echo 'export SSH_AUTH_SOCK=$HOME/snap/bitwarden/current/.bitwarden-ssh-agent.sock' >> ~/.bashrc
+fi
+# {{ end }}
+
 if ! command -v gh &> /dev/null; then
   echo -e "\n * * Install GitHub CLI * * \n"
   type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
