@@ -97,6 +97,13 @@ if (!(git extras --version)) {
   Remove-Item $path -Force -Recurse
 }
 
+$path = "$env:ProgramFiles\Git\usr\bin\git-flow"
+if (!(Test-Path $path) -and !(Get-Command git-flow -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Git Flow Next * * `n"
+  sudo winget install --id GitTower.GitFlowNext --exact --silent
+  refreshenv
+}
+
 if (!(Get-Command TortoiseGitProc -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install TortoiseGit * * `n"
   sudo choco install tortoisegit -y
