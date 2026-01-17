@@ -1,5 +1,25 @@
 #!/bin/bash
 
+if ! command -v brew &> /dev/null; then
+  echo -e "\n * * Install Homebrew * * \n"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+  echo -e "\n * * Install Homebrew dependencies * * \n"
+  sudo apt update && \
+  sudo apt install build-essential -y
+
+  echo -e "\n * * Install Homebrew recommendations * * \n"
+  brew install gcc
+fi
+
+# shellcheck disable=SC2016
+if ! grep -Fxq 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' ~/.bashrc; then
+  echo -e "\n * * Add Homebrew to shell configuration * * \n"
+  echo >> ~/.bashrc
+  echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
+fi
+
 # {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 if [ ! -e '{{ .ssh.keyfile }}' ]; then
   if [ ! -e ~/.ssh ] && [ -e "$USERPROFILE/.ssh" ]; then
