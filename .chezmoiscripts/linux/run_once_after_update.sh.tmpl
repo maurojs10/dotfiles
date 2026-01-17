@@ -57,6 +57,7 @@ fi
 
 if ! command -v micro &> /dev/null; then
   echo -e "\n * * Install micro * * \n"
+  sudo apt update && \
   sudo apt install micro -y
 fi
 
@@ -86,6 +87,7 @@ fi
 # {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 if ! command -v socat &> /dev/null; then
   echo -e "\n * * Install socat * * \n"
+  sudo apt update && \
   sudo apt install socat -y
 fi
 # {{ end }}
