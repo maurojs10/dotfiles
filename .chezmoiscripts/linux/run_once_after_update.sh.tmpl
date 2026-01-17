@@ -50,6 +50,11 @@ if ! command -v git &> /dev/null; then
   && sudo apt install git -y
 fi
 
+if ! command -v git-flow &> /dev/null; then
+  echo -e "\n * * Install Git Flow Next * * \n"
+  brew install gittower/tap/git-flow-next
+fi
+
 if ! command -v micro &> /dev/null; then
   echo -e "\n * * Install micro * * \n"
   sudo apt install micro -y
