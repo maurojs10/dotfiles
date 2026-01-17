@@ -70,6 +70,7 @@ fi
 if ! grep -q "SSH_AUTH_SOCK" ~/.bashrc; then
   echo -e "\n * * Configure SSH agent for Bitwarden * * \n"
   {
+    echo
     echo 'export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock'
     echo 'ss -a | grep -q $SSH_AUTH_SOCK'
     echo 'if [ $? -ne 0 ]; then'
