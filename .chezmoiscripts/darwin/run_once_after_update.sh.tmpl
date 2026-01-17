@@ -1,5 +1,18 @@
 #!/bin/zsh
 
+if ! command -v brew &> /dev/null; then
+  echo -e "\n * * Install Homebrew * * \n"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# shellcheck disable=SC2016
+if ! grep -Fxq 'eval "$(/opt/homebrew/bin/brew shellenv)"' ~/.zprofile; then
+  echo -e "\n * * Add Homebrew to shell configuration * * \n"
+  echo >> ~/.zprofile
+  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+fi
+
 if [ ! -e '{{ .ssh.keyfile }}' ]; then
   echo -e "\n * * Generate SSH key * * \n"
   ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.username | lower }}@{{ .chezmoi.hostname | lower }}'
