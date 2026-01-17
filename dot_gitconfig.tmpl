@@ -55,7 +55,16 @@
 	# Custom
 	summary2 = "!f() { onefetch --show-logo=never $@; }; f"
 	pab = push origin : --follow-tags --verbose
-	pufo = push --force-with-lease origin --verbose
+	pufo = "!f() { \
+		b=$(git rev-parse --abbrev-ref HEAD); \
+		case \"$b\" in \
+			main|master) \
+				echo -e \"\\033[31mForce-push blocked on $b branch\\033[0m\"; \
+				return 1;; \
+			*) \
+				git push --force-with-lease origin --verbose;; \
+		esac; \
+	}; f"
 	log-since-last-merge = "!f() { git log `git log --no-show-signature --pretty=format:\"%H\" --merges -n 1`..HEAD $@; }; f"
 	absorb-since-last-merge = "!f() { git absorb --base `git log --no-show-signature --pretty=format:\"%H\" --merges -n 1` $@; }; f"
 	rebase-since-last-merge = "!f() { git rebase --interactive `git log --no-show-signature --pretty=format:\"%H\" --merges -n 1` $@; }; f"
