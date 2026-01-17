@@ -53,6 +53,7 @@ fi
 # shellcheck disable=SC2016
 if ! grep -q "SSH_AUTH_SOCK" ~/.bashrc; then
   echo -e "\n * * Configure SSH agent for Bitwarden * * \n"
+  echo >> ~/.bashrc
   echo 'export SSH_AUTH_SOCK=$HOME/snap/bitwarden/current/.bitwarden-ssh-agent.sock' >> ~/.bashrc
 fi
 # {{ end }}
