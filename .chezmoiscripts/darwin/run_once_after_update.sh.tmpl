@@ -27,6 +27,7 @@ fi
 
 if ! grep -q "SSH_AUTH_SOCK" ~/.zshrc; then
   echo -e "\n * * Configure SSH agent for Bitwarden * * \n"
+  echo >> ~/.zshrc
   echo 'export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock' >> ~/.zshrc
 fi
 
