@@ -14,6 +14,7 @@ $git_state\
 $git_status\
 $git_metrics\
 [](fg:git_bg bg:tool_bg)\
+$java\
 $nodejs\
 $rust\
 $golang\
@@ -102,6 +103,11 @@ untracked = ' [+$count](fg:yellow bg:git_bg)'
 [git_metrics]
 format = '[( [⨤$added](fg:green bg:git_bg))( [≂$deleted](fg:red bg:git_bg))](bg:git_bg)'
 disabled = false
+
+[java]
+symbol = ""
+format = '[[ $symbol ($version)](fg:tool_fg bg:tool_bg)]($style)'
+style = "bg:tool_bg"
 
 [nodejs]
 symbol = ""
