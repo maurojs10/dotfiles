@@ -15,25 +15,120 @@ if (!(Get-Command pwsh -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
-if (!(Test-Path $PROFILE)) {
-  if (!(Test-Path (Split-Path -Path $PROFILE))) {
-    Write-Output "`n * * Create PowerShell profile folder * * `n"
-    New-Item -Path (Split-Path -Path $PROFILE) -ItemType Directory | Out-Null
+$WindowsCmdAutoRunPath = [Environment]::GetFolderPath('MyDocuments') + '\WindowsCmd\AutoRun.bat'
+$WindowsCmdAutoRunText = @'
+@echo off
+
+if /i "%~1" == "install" (reg add "HKCU\Software\Microsoft\Command Processor" /v "AutoRun" /t REG_SZ /d "%~f0" /f && goto :eof)
+if /i "%~1" == "uninstall" (reg delete "HKCU\Software\Microsoft\Command Processor" /v "AutoRun" /f && goto :eof)
+
+prompt [%USERNAME%@%COMPUTERNAME%] $P$_$G
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Test-Path $WindowsCmdAutoRunPath)) {
+  if (!(Test-Path (Split-Path $WindowsCmdAutoRunPath))) {
+    Write-Output "`n * * Create Command Prompt autorun folder * * `n"
+    New-Item -Path (Split-Path $WindowsCmdAutoRunPath) -ItemType Directory | Out-Null
   }
 
-  Write-Output "`n * * Add PowerShell profile script * * `n"
-  New-Item -Path $PROFILE -ItemType File | Out-Null
+  Write-Output "`n * * Add Command Prompt autorun script * * `n"
+  New-Item $WindowsCmdAutoRunPath -ItemType File | Out-Null
+
+  if (![string]::IsNullOrWhiteSpace($WindowsCmdAutoRunText)) {
+    Write-Output "`n * * Add content to Command Prompt autorun script * * `n"
+    $WindowsCmdAutoRunText | Out-File $WindowsCmdAutoRunPath -Append -Encoding ascii
+  }
+
+  Write-Output "`n * * Configure Command Prompt autorun script * * `n"
+  reg add "HKCU\Software\Microsoft\Command Processor" /v "AutoRun" /t REG_SZ /d "$WindowsCmdAutoRunPath" /f
 }
 
-$ChocolateyProfileInstall = @'
+$PowerShell5ProfilePath = (powershell -NoLogo -NoProfile -Command '$PROFILE')
+$PowerShell5ProfileText = @'
+if ((Test-Path Alias:\cat) -and (Get-Command -Name cat.exe -ErrorAction SilentlyContinue)) {
+  Remove-Item -Force -Path Alias:\cat
+}
+
+if ((Test-Path Alias:\curl) -and (Get-Command -Name curl.exe -ErrorAction SilentlyContinue)) {
+  Remove-Item -Force -Path Alias:\curl
+}
+
+if ((Test-Path Alias:\diff) -and (Get-Command -Name diff.exe -ErrorAction SilentlyContinue)) {
+  Remove-Item -Force -Path Alias:\diff
+}
+
+if ((Test-Path Alias:\ls) -and (Get-Command -Name ls.exe -ErrorAction SilentlyContinue)) {
+  Remove-Item -Force -Path Alias:\ls
+}
+
+if ((Test-Path Alias:\wget) -and (Get-Command -Name wget.exe -ErrorAction SilentlyContinue)) {
+  Remove-Item -Force -Path Alias:\wget
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Test-Path $PowerShell5ProfilePath)) {
+  if (!(Test-Path (Split-Path $PowerShell5ProfilePath))) {
+    Write-Output "`n * * Create PowerShell 5 profile folder * * `n"
+    New-Item -Path (Split-Path $PowerShell5ProfilePath) -ItemType Directory | Out-Null
+  }
+
+  Write-Output "`n * * Add PowerShell 5 profile script * * `n"
+  New-Item $PowerShell5ProfilePath -ItemType File | Out-Null
+
+  if (![string]::IsNullOrWhiteSpace($PowerShell5ProfileText)) {
+    Write-Output "`n * * Add content to PowerShell 5 profile script * * `n"
+    $PowerShell5ProfileText | Out-File $PowerShell5ProfilePath -Append -Encoding ascii
+  }
+}
+
+$PowerShell7ProfilePath = (pwsh -NoLogo -NoProfile -Command '$PROFILE')
+$PowerShell7ProfileText = @'
+if ((Test-Path Alias:\cat) -and (Get-Command -Name cat.exe -ErrorAction SilentlyContinue)) {
+  Remove-Item -Force -Path Alias:\cat
+}
+
+if ((Test-Path Alias:\diff) -and (Get-Command -Name diff.exe -ErrorAction SilentlyContinue)) {
+  Remove-Item -Force -Path Alias:\diff
+}
+
+if ((Test-Path Alias:\ls) -and (Get-Command -Name ls.exe -ErrorAction SilentlyContinue)) {
+  Remove-Item -Force -Path Alias:\ls
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Test-Path $PowerShell7ProfilePath)) {
+  if (!(Test-Path (Split-Path $PowerShell7ProfilePath))) {
+    Write-Output "`n * * Create PowerShell 7 profile folder * * `n"
+    New-Item -Path (Split-Path $PowerShell7ProfilePath) -ItemType Directory | Out-Null
+  }
+
+  Write-Output "`n * * Add PowerShell 7 profile script * * `n"
+  New-Item $PowerShell7ProfilePath -ItemType File | Out-Null
+
+  if (![string]::IsNullOrWhiteSpace($PowerShell7ProfileText)) {
+    Write-Output "`n * * Add content to PowerShell 7 profile script * * `n"
+    $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
+  }
+}
+
+$PowerShell5ProfileText = "`r`n" + @'
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path $ChocolateyProfile) {
+  Write-Output 'Loading chocolatey profile...'
   Import-Module $ChocolateyProfile
 }
-'@
-if (!(Select-String $PROFILE -Pattern '$ChocolateyProfile' -Quiet -SimpleMatch)) {
-  Write-Output "`n * * Configure Chocolatey in PowerShell profile script * * `n"
-  $ChocolateyProfileInstall | Out-File $PROFILE -Append -Encoding utf8
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Select-String $PowerShell5ProfilePath -Pattern '$ChocolateyProfile' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure Chocolatey in PowerShell 5 profile script * * `n"
+  $PowerShell5ProfileText | Out-File $PowerShell5ProfilePath -Append -Encoding ascii
+}
+
+$PowerShell7ProfileText = $PowerShell5ProfileText
+
+if (!(Select-String $PowerShell7ProfilePath -Pattern '$ChocolateyProfile' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure Chocolatey in PowerShell 7 profile script * * `n"
+  $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
 }
 
 $ChocolateyProfile = "$env:ProgramData\chocolatey\helpers\chocolateyProfile.psm1"
@@ -51,6 +146,25 @@ if (!(Get-Command gsudo -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install gsudo * * `n"
   Start-Process choco 'install gsudo -y' -Verb RunAs -Wait
   refreshenv
+}
+
+$PowerShell5ProfileText = "`r`n" + @'
+if (Get-Module gsudoModule -ListAvailable) {
+  Write-Output 'Loading gsudo module...'
+  Import-Module gsudoModule
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Select-String $PowerShell5ProfilePath -Pattern 'gsudoModule' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure gsudo in PowerShell 5 profile script * * `n"
+  $PowerShell5ProfileText | Out-File $PowerShell5ProfilePath -Append -Encoding ascii
+}
+
+$PowerShell7ProfileText = $PowerShell5ProfileText
+
+if (!(Select-String $PowerShell7ProfilePath -Pattern 'gsudoModule' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure gsudo in PowerShell 7 profile script * * `n"
+  $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
 }
 
 Write-Output "`n * * Start gsudo cache for the current session * * `n"
@@ -149,6 +263,25 @@ if (!(Get-Command gh -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
+$PowerShell5ProfileText = "`r`n" + @'
+if (Get-Command -Name gh -ErrorAction SilentlyContinue) {
+  Write-Output 'Loading gh completion...'
+  Invoke-Expression -Command $(gh completion --shell powershell | Out-String)
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Select-String $PowerShell5ProfilePath -Pattern 'gh completion' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure GitHub CLI in PowerShell 5 profile script * * `n"
+  $PowerShell5ProfileText | Out-File $PowerShell5ProfilePath -Append -Encoding ascii
+}
+
+$PowerShell7ProfileText = $PowerShell5ProfileText
+
+if (!(Select-String $PowerShell7ProfilePath -Pattern 'gh completion' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure GitHub CLI in PowerShell 7 profile script * * `n"
+  $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
+}
+
 gh auth status -h github.com | Out-Null ; if ($LASTEXITCODE -ne 0) {
   Write-Output "`n * * Authenticate with GitHub * * `n"
   gh auth login -h github.com -p ssh --scopes "admin:public_key admin:ssh_signing_key gist read:org repo" --skip-ssh-key
@@ -172,6 +305,28 @@ if (!(Test-Path "$env:SystemRoot\Fonts\CaskaydiaMonoNerdFont-Regular.ttf")) {
 if (!(Get-Command starship -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install Starship * * `n"
   sudo choco install starship -y
+}
+
+$PowerShell5ProfileText = "`r`n" + @'
+if (Get-Command -Name starship -ErrorAction SilentlyContinue) {
+  Write-Output 'Loading starship...'
+  Invoke-Expression (&starship init powershell)
+} else {
+  Write-Output 'Loading default prompt...'
+  function prompt { "`n[$env:USERNAME@$env:COMPUTERNAME] $($pwd.ProviderPath)`n> " }
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Select-String $PowerShell5ProfilePath -Pattern 'starship init' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure Starship in PowerShell 5 profile script * * `n"
+  $PowerShell5ProfileText | Out-File $PowerShell5ProfilePath -Append -Encoding ascii
+}
+
+$PowerShell7ProfileText = $PowerShell5ProfileText
+
+if (!(Select-String $PowerShell7ProfilePath -Pattern 'starship init' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure Starship in PowerShell 7 profile script * * `n"
+  $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
 }
 
 if (!(Test-Path "$env:USERPROFILE\source")) {
