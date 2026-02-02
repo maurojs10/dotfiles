@@ -359,6 +359,30 @@ if (!(Select-String $PowerShell7ProfilePath -Pattern 'scoop-search' -Quiet -Simp
   $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
 }
 
+if (!(Get-Command zoxide -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install zoxide * * `n"
+  scoop install zoxide
+}
+
+$PowerShell5ProfileText = "`r`n" + @'
+if (Get-Command -Name zoxide -ErrorAction SilentlyContinue) {
+  Write-Output 'Loading zoxide...'
+  Invoke-Expression (& { (zoxide init powershell --cmd cd | Out-String) })
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Select-String $PowerShell5ProfilePath -Pattern 'zoxide' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure zoxide in PowerShell 5 profile script * * `n"
+  $PowerShell5ProfileText | Out-File $PowerShell5ProfilePath -Append -Encoding ascii
+}
+
+$PowerShell7ProfileText = $PowerShell5ProfileText
+
+if (!(Select-String $PowerShell7ProfilePath -Pattern 'zoxide' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure zoxide in PowerShell 7 profile script * * `n"
+  $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
+}
+
 if (!(Test-Path "$env:USERPROFILE\source")) {
   Write-Output "`n * * Create folder for source code subfolders * * `n"
   New-Item -Path "$env:USERPROFILE\source" -ItemType Directory | Out-Null
