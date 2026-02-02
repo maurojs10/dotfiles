@@ -329,6 +329,12 @@ if (!(Select-String $PowerShell7ProfilePath -Pattern 'starship init' -Quiet -Sim
   $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
 }
 
+if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Scoop * * `n"
+  Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+  refreshenv
+}
+
 if (!(Test-Path "$env:USERPROFILE\source")) {
   Write-Output "`n * * Create folder for source code subfolders * * `n"
   New-Item -Path "$env:USERPROFILE\source" -ItemType Directory | Out-Null
