@@ -383,6 +383,42 @@ if (!(Select-String $PowerShell7ProfilePath -Pattern 'zoxide' -Quiet -SimpleMatc
   $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
 }
 
+if (!(Get-Command spf -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install superfile * * `n"
+  scoop install superfile
+}
+
+$PowerShell5ProfileText = "`r`n" + @'
+# https://superfile.dev/configure/superfile-config/#cd_on_quit
+function spf() {
+  param (
+    [string[]]$Params
+  )
+  $spf_location = [Environment]::GetFolderPath("USERPROFILE") + "\scoop\shims\spf.exe"
+  $SPF_LAST_DIR_PATH = [Environment]::GetFolderPath("LocalApplicationData") + "\superfile\lastdir"
+
+  & $spf_location @Params
+
+  if (Test-Path $SPF_LAST_DIR_PATH) {
+    $SPF_LAST_DIR = Get-Content -Path $SPF_LAST_DIR_PATH
+    Invoke-Expression $SPF_LAST_DIR
+    Remove-Item -Force $SPF_LAST_DIR_PATH
+  }
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Select-String $PowerShell5ProfilePath -Pattern 'function spf' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure superfile in PowerShell 5 profile script * * `n"
+  $PowerShell5ProfileText | Out-File $PowerShell5ProfilePath -Append -Encoding ascii
+}
+
+$PowerShell7ProfileText = $PowerShell5ProfileText
+
+if (!(Select-String $PowerShell7ProfilePath -Pattern 'function spf' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure superfile in PowerShell 7 profile script * * `n"
+  $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
+}
+
 if (!(Test-Path "$env:USERPROFILE\source")) {
   Write-Output "`n * * Create folder for source code subfolders * * `n"
   New-Item -Path "$env:USERPROFILE\source" -ItemType Directory | Out-Null
