@@ -335,6 +335,30 @@ if (!(Get-Command scoop -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
+if (!(Get-Command scoop-search -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install scoop-search * * `n"
+  scoop install scoop-search
+}
+
+$PowerShell5ProfileText = "`r`n" + @'
+if (Get-Command -Name scoop-search -ErrorAction SilentlyContinue) {
+  Write-Output 'Loading scoop-search hook...'
+  . ([ScriptBlock]::Create((& scoop-search --hook | Out-String)))
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Select-String $PowerShell5ProfilePath -Pattern 'scoop-search' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure scoop-search in PowerShell 5 profile script * * `n"
+  $PowerShell5ProfileText | Out-File $PowerShell5ProfilePath -Append -Encoding ascii
+}
+
+$PowerShell7ProfileText = $PowerShell5ProfileText
+
+if (!(Select-String $PowerShell7ProfilePath -Pattern 'scoop-search' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure scoop-search in PowerShell 7 profile script * * `n"
+  $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
+}
+
 if (!(Test-Path "$env:USERPROFILE\source")) {
   Write-Output "`n * * Create folder for source code subfolders * * `n"
   New-Item -Path "$env:USERPROFILE\source" -ItemType Directory | Out-Null
