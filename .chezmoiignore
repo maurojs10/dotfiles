@@ -14,5 +14,6 @@ README.md
 
 {{ if ne .chezmoi.os "windows" }}
 .chezmoiscripts/windows/**
+AppData/Local/superfile/config.toml
 AppData/Roaming/NuGet/nuget.config
 {{ end }}
