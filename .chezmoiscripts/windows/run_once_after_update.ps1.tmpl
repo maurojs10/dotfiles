@@ -419,6 +419,45 @@ if (!(Select-String $PowerShell7ProfilePath -Pattern 'function spf' -Quiet -Simp
   $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
 }
 
+if (!(Get-Command mise -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install mise * * `n"
+  scoop install mise
+}
+
+$WindowsCmdAutoRunText = "`r`n" + @'
+where /q mise && path=%LOCALAPPDATA%\mise\shims;%PATH%
+'@
+
+if (!(Select-String $WindowsCmdAutoRunPath -Pattern 'mise\shims' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure mise in Command Prompt autorun script * * `n"
+  $WindowsCmdAutoRunText | Out-File $WindowsCmdAutoRunPath -Append -Encoding ascii
+}
+
+$PowerShell5ProfileText = "`r`n" + @'
+if (Get-Command -Name mise -ErrorAction SilentlyContinue) {
+  $env:MISE_PWSH_CHPWD_WARNING=0
+  Write-Output 'Loading mise...'
+  (&mise activate pwsh) | Out-String | Invoke-Expression
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Select-String $PowerShell5ProfilePath -Pattern 'mise activate' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure mise in PowerShell 5 profile script * * `n"
+  $PowerShell5ProfileText | Out-File $PowerShell5ProfilePath -Append -Encoding ascii
+}
+
+$PowerShell7ProfileText = "`r`n" + @'
+if (Get-Command -Name mise -ErrorAction SilentlyContinue) {
+  Write-Output 'Loading mise...'
+  (&mise activate pwsh) | Out-String | Invoke-Expression
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Select-String $PowerShell7ProfilePath -Pattern 'mise activate' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure mise in PowerShell 7 profile script * * `n"
+  $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
+}
+
 if (!(Test-Path "$env:USERPROFILE\source")) {
   Write-Output "`n * * Create folder for source code subfolders * * `n"
   New-Item -Path "$env:USERPROFILE\source" -ItemType Directory | Out-Null
