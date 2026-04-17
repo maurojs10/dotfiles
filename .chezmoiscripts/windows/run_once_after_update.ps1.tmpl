@@ -15,6 +15,15 @@ if (!(Get-Command pwsh -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
+$WindowsCmdCurrentPrompt = [System.Environment]::GetEnvironmentVariable('PROMPT', 'User')
+$WindowsCmdNewPrompt = '[%USERNAME%@%COMPUTERNAME%] $P$_$G'
+$WindowsCmdNewPrompt = $WindowsCmdNewPrompt -replace '%USERNAME%', $env:USERNAME
+$WindowsCmdNewPrompt = $WindowsCmdNewPrompt -replace '%COMPUTERNAME%', $env:COMPUTERNAME
+if ($WindowsCmdCurrentPrompt -ne $WindowsCmdNewPrompt) {
+  Write-Output "`n * * Configure Command Prompt prompt * * `n"
+  [System.Environment]::SetEnvironmentVariable('PROMPT', $WindowsCmdNewPrompt, 'User')
+}
+
 $PowerShell5ProfilePath = (powershell -NoLogo -NoProfile -Command '$PROFILE')
 $PowerShell5ProfileText = @'
 if ((Test-Path Alias:\cat) -and (Get-Command -Name cat.exe -ErrorAction SilentlyContinue)) {
