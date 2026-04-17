@@ -15,34 +15,6 @@ if (!(Get-Command pwsh -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
-$WindowsCmdAutoRunPath = [Environment]::GetFolderPath('MyDocuments') + '\WindowsCmd\AutoRun.bat'
-$WindowsCmdAutoRunText = @'
-@echo off
-
-if /i "%~1" == "install" (reg add "HKCU\Software\Microsoft\Command Processor" /v "AutoRun" /t REG_SZ /d "%~f0" /f && goto :eof)
-if /i "%~1" == "uninstall" (reg delete "HKCU\Software\Microsoft\Command Processor" /v "AutoRun" /f && goto :eof)
-
-prompt [%USERNAME%@%COMPUTERNAME%] $P$_$G
-'@ -replace '\r?\n', "`r`n"
-
-if (!(Test-Path $WindowsCmdAutoRunPath)) {
-  if (!(Test-Path (Split-Path $WindowsCmdAutoRunPath))) {
-    Write-Output "`n * * Create Command Prompt autorun folder * * `n"
-    New-Item -Path (Split-Path $WindowsCmdAutoRunPath) -ItemType Directory | Out-Null
-  }
-
-  Write-Output "`n * * Add Command Prompt autorun script * * `n"
-  New-Item $WindowsCmdAutoRunPath -ItemType File | Out-Null
-
-  if (![string]::IsNullOrWhiteSpace($WindowsCmdAutoRunText)) {
-    Write-Output "`n * * Add content to Command Prompt autorun script * * `n"
-    $WindowsCmdAutoRunText | Out-File $WindowsCmdAutoRunPath -Append -Encoding ascii
-  }
-
-  Write-Output "`n * * Configure Command Prompt autorun script * * `n"
-  reg add "HKCU\Software\Microsoft\Command Processor" /v "AutoRun" /t REG_SZ /d "$WindowsCmdAutoRunPath" /f
-}
-
 $PowerShell5ProfilePath = (powershell -NoLogo -NoProfile -Command '$PROFILE')
 $PowerShell5ProfileText = @'
 if ((Test-Path Alias:\cat) -and (Get-Command -Name cat.exe -ErrorAction SilentlyContinue)) {
@@ -422,15 +394,6 @@ if (!(Select-String $PowerShell7ProfilePath -Pattern 'function spf' -Quiet -Simp
 if (!(Get-Command mise -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install mise * * `n"
   scoop install mise
-}
-
-$WindowsCmdAutoRunText = "`r`n" + @'
-where /q mise && path=%LOCALAPPDATA%\mise\shims;%PATH%
-'@
-
-if (!(Select-String $WindowsCmdAutoRunPath -Pattern 'mise\shims' -Quiet -SimpleMatch)) {
-  Write-Output "`n * * Configure mise in Command Prompt autorun script * * `n"
-  $WindowsCmdAutoRunText | Out-File $WindowsCmdAutoRunPath -Append -Encoding ascii
 }
 
 $PowerShell5ProfileText = "`r`n" + @'
