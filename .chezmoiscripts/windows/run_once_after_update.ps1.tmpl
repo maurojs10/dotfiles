@@ -405,6 +405,14 @@ if (!(Get-Command mise -ErrorAction SilentlyContinue)) {
   scoop install mise
 }
 
+$MiseShimsPath = "$env:LOCALAPPDATA\mise\shims"
+$CurrentUserPath = [System.Environment]::GetEnvironmentVariable('PATH', 'User')
+if ($CurrentUserPath -notlike "*$MiseShimsPath*") {
+  Write-Output "`n * * Add mise shims to user path * * `n"
+  [System.Environment]::SetEnvironmentVariable('PATH', "$MiseShimsPath;$CurrentUserPath", 'User')
+  refreshenv
+}
+
 $PowerShell5ProfileText = "`r`n" + @'
 if (Get-Command -Name mise -ErrorAction SilentlyContinue) {
   $env:MISE_PWSH_CHPWD_WARNING=0
