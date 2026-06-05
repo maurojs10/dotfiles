@@ -3,9 +3,6 @@ data:
     name: '{{ promptStringOnce . "git.name" "What is your Git name" "Mauro José da Silva" }}'
     email: '{{ promptStringOnce . "git.email" "What is your Git email" "maurojs10@gmail.com" }}'
   ssh:
-    keytype: ed25519
-    keyfile: '{{ .chezmoi.homeDir }}/.ssh/id_ed25519'
-    publickey: '{{ .chezmoi.homeDir }}/.ssh/id_ed25519.pub'
     signingkey: '{{ .chezmoi.homeDir }}/.ssh/id_ed25519_bw.pub'
     allowedSigners: '{{ .chezmoi.homeDir }}/.ssh/allowed_signers'
 git:

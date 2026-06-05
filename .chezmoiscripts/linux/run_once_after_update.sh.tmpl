@@ -20,22 +20,6 @@ if ! grep -Fxq 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' ~/.bashr
   echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
 fi
 
-# {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-if [ ! -e '{{ .ssh.keyfile }}' ]; then
-  if [ ! -e ~/.ssh ] && [ -e "$USERPROFILE/.ssh" ]; then
-    echo -e "\n * * Create symlink for SSH folder * * \n"
-    ln -s "$USERPROFILE/.ssh" ~/.ssh
-    chmod 700 ~/.ssh
-    chmod 600 ~/.ssh/*
-  fi
-fi
-# {{ else }}
-if [ ! -e '{{ .ssh.keyfile }}' ]; then
-  echo -e "\n * * Generate SSH key * * \n"
-  ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.username | lower }}@{{ .chezmoi.hostname | lower }}'
-fi
-# {{ end }}
-
 if dpkg --no-pager --list | grep -q '^ii  git '; then
   if ! dpkg-query --show --showformat='${Version}' git | grep -q 'ppa'; then
     echo -e "\n * * Uninstall Git from default repository * * \n"
@@ -122,12 +106,6 @@ if ! gh auth status -h github.com &> /dev/null; then
   echo -e "\n * * Authenticate with GitHub * * \n"
   gh auth login -h github.com -p ssh --scopes "admin:public_key admin:ssh_signing_key gist read:org repo" --skip-ssh-key
 fi
-
-echo -e "\n * * Add SSH key to GitHub for authentication * * \n"
-gh ssh-key add '{{ .ssh.publickey }}' --type authentication
-
-echo -e "\n * * Add SSH key to GitHub for signing * * \n"
-gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
 echo -e "\n * * Update allowed signers from GitHub * * \n"
 GH_USER=$(gh api user --jq '.login')

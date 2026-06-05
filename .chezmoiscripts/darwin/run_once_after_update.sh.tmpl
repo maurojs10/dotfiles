@@ -13,11 +13,6 @@ if ! grep -Fxq 'eval "$(/opt/homebrew/bin/brew shellenv)"' ~/.zprofile; then
   echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
 fi
 
-if [ ! -e '{{ .ssh.keyfile }}' ]; then
-  echo -e "\n * * Generate SSH key * * \n"
-  ssh-keygen -f '{{ .ssh.keyfile }}' -t '{{ .ssh.keytype }}' -C '{{ .chezmoi.username | lower }}@{{ .chezmoi.hostname | lower }}'
-fi
-
 if ! command -v git &> /dev/null; then
   echo -e "\n * * Install Git * * \n"
   brew install git
@@ -58,12 +53,6 @@ if ! gh auth status -h github.com &> /dev/null; then
   echo -e "\n * * Authenticate with GitHub * * \n"
   gh auth login -h github.com -p ssh --scopes "admin:public_key admin:ssh_signing_key gist read:org repo" --skip-ssh-key
 fi
-
-echo -e "\n * * Add SSH key to GitHub for authentication * * \n"
-gh ssh-key add '{{ .ssh.publickey }}' --type authentication
-
-echo -e "\n * * Add SSH key to GitHub for signing * * \n"
-gh ssh-key add '{{ .ssh.publickey }}' --type signing
 
 echo -e "\n * * Update allowed signers from GitHub * * \n"
 GH_USER=$(gh api user --jq '.login')
