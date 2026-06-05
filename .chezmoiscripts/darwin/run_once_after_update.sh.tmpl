@@ -6,11 +6,12 @@ if ! command -v brew &> /dev/null; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016 source=/dev/null
 if ! grep -Fxq 'eval "$(/opt/homebrew/bin/brew shellenv)"' ~/.zprofile; then
   echo -e "\n * * Add Homebrew to shell configuration * * \n"
   echo >> ~/.zprofile
   echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+  source ~/.zprofile
 fi
 
 if ! command -v git &> /dev/null; then
@@ -38,10 +39,12 @@ if [ ! -d "/Applications/Bitwarden.app" ]; then
   brew install --cask bitwarden
 fi
 
+# shellcheck disable=SC2016 source=/dev/null
 if ! grep -q "SSH_AUTH_SOCK" ~/.zshrc; then
   echo -e "\n * * Configure SSH agent for Bitwarden * * \n"
   echo >> ~/.zshrc
   echo 'export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock' >> ~/.zshrc
+  source ~/.zshrc
 fi
 
 if [ ! -e ~/.ssh ]; then
@@ -69,11 +72,12 @@ if ! command -v mise &> /dev/null; then
   brew install mise
 fi
 
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016 source=/dev/null
 if ! grep -Fxq 'eval "$(mise activate zsh)"' ~/.zshrc; then
   echo -e "\n * * Add mise to shell configuration * * \n"
   echo >> ~/.zshrc
   echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
+  source ~/.zshrc
 fi
 
 if [ ! -e ~/source ]; then

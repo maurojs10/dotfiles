@@ -13,11 +13,12 @@ if ! command -v brew &> /dev/null; then
   brew install gcc
 fi
 
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016 source=/dev/null
 if ! grep -Fxq 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' ~/.bashrc; then
   echo -e "\n * * Add Homebrew to shell configuration * * \n"
   echo >> ~/.bashrc
   echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
+  source ~/.bashrc
 fi
 
 if dpkg --no-pager --list | grep -q '^ii  git '; then
@@ -60,11 +61,12 @@ fi
 # {{ end }}
 
 # {{ if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016 source=/dev/null
 if ! grep -q "SSH_AUTH_SOCK" ~/.bashrc; then
   echo -e "\n * * Configure SSH agent for Bitwarden * * \n"
   echo >> ~/.bashrc
   echo 'export SSH_AUTH_SOCK=$HOME/snap/bitwarden/current/.bitwarden-ssh-agent.sock' >> ~/.bashrc
+  source ~/.bashrc
 fi
 # {{ end }}
 
@@ -134,11 +136,12 @@ if ! command -v starship &> /dev/null; then
   eval "$(starship init bash)"
 fi
 
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016 source=/dev/null
 if ! grep -Fxq 'eval "$(starship init bash)"' ~/.bashrc; then
   echo -e "\n * * Add Starship to shell configuration * * \n"
   echo >> ~/.bashrc
   echo 'eval "$(starship init bash)"' >> ~/.bashrc
+  source ~/.bashrc
 fi
 
 if ! command -v mise &> /dev/null; then
@@ -146,11 +149,12 @@ if ! command -v mise &> /dev/null; then
   brew install mise
 fi
 
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016 source=/dev/null
 if ! grep -Fxq 'eval "$(mise activate bash)"' ~/.bashrc; then
   echo -e "\n * * Add mise to shell configuration * * \n"
   echo >> ~/.bashrc
   echo 'eval "$(mise activate bash)"' >> ~/.bashrc
+  source ~/.bashrc
 fi
 
 # {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
