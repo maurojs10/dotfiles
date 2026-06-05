@@ -92,6 +92,12 @@ if ! grep -q "SSH_AUTH_SOCK" ~/.bashrc; then
 fi
 # {{ end }}
 
+if [ ! -e ~/.ssh ]; then
+  echo -e "\n * * Create SSH folder * * \n"
+  mkdir ~/.ssh
+  chmod 700 ~/.ssh
+fi
+
 if ! command -v gh &> /dev/null; then
   echo -e "\n * * Install GitHub CLI * * \n"
   type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)

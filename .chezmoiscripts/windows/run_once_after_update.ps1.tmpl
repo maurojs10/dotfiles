@@ -228,6 +228,11 @@ if (!(Get-Command npiperelay -ErrorAction SilentlyContinue)) {
   sudo choco install npiperelay -y
 }
 
+if (!(Test-Path "$env:USERPROFILE\.ssh")) {
+  Write-Output "`n * * Create SSH folder * * `n"
+  New-Item -Path "$env:USERPROFILE\.ssh" -ItemType Directory | Out-Null
+}
+
 if (!(Get-Command gh -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install GitHub CLI * * `n"
   sudo choco install gh -y
