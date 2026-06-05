@@ -3,7 +3,7 @@ data:
     name: '{{ promptStringOnce . "git.name" "What is your Git name" "Mauro José da Silva" }}'
     email: '{{ promptStringOnce . "git.email" "What is your Git email" "maurojs10@gmail.com" }}'
   ssh:
-    signingkey: '{{ .chezmoi.homeDir }}/.ssh/id_ed25519_bw.pub'
+    signingkey: '{{ promptStringOnce . "ssh.signingkey" "What is your SSH signing key" "key::ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM2/gGlEaeukiZu0rDesbTwhcGCkQfkaw567x65n1THs mauro@bitwarden" }}'
     allowedSigners: '{{ .chezmoi.homeDir }}/.ssh/allowed_signers'
 git:
   autoAdd: true
