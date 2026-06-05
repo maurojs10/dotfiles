@@ -64,6 +64,18 @@ echo -e "\n * * Update allowed signers from GitHub * * \n"
 GH_USER=$(gh api user --jq '.login')
 gh api "users/$GH_USER/ssh_signing_keys" --paginate --jq '.[].key' > '{{ .ssh.allowedSigners }}'
 
+if ! command -v mise &> /dev/null; then
+  echo -e "\n * * Install mise * * \n"
+  brew install mise
+fi
+
+# shellcheck disable=SC2016
+if ! grep -Fxq 'eval "$(mise activate zsh)"' ~/.zshrc; then
+  echo -e "\n * * Add mise to shell configuration * * \n"
+  echo >> ~/.zshrc
+  echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
+fi
+
 if [ ! -e ~/source ]; then
   echo -e "\n * * Create folder for source code subfolders * * \n"
   mkdir -p ~/source

@@ -141,6 +141,18 @@ if ! grep -Fxq 'eval "$(starship init bash)"' ~/.bashrc; then
   echo 'eval "$(starship init bash)"' >> ~/.bashrc
 fi
 
+if ! command -v mise &> /dev/null; then
+  echo -e "\n * * Install mise * * \n"
+  brew install mise
+fi
+
+# shellcheck disable=SC2016
+if ! grep -Fxq 'eval "$(mise activate bash)"' ~/.bashrc; then
+  echo -e "\n * * Add mise to shell configuration * * \n"
+  echo >> ~/.bashrc
+  echo 'eval "$(mise activate bash)"' >> ~/.bashrc
+fi
+
 # {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 if [ ! -e ~/source ] && [ -e "$USERPROFILE/source" ]; then
   echo -e "\n * * Create symlink for source code subfolders * * \n"
