@@ -217,6 +217,11 @@ if (!(Get-Command code -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
+if (!(Get-Command notepad++ -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install Notepad++ * * `n"
+  sudo choco install notepadplusplus --ia "NOUPDATER=1" -y
+}
+
 $path = "$env:LOCALAPPDATA\Programs\Bitwarden\Bitwarden.exe"
 if (!(Test-Path $path)) {
   Write-Output "`n * * Install Bitwarden Desktop * * `n"
