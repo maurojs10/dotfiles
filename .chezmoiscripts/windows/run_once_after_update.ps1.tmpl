@@ -240,25 +240,34 @@ if (!(Test-Path "$env:USERPROFILE\.ssh")) {
 
 $knownHostsPath = "$env:USERPROFILE\.ssh\known_hosts"
 $sshKeyscanPath = "$env:ProgramFiles\Git\usr\bin\ssh-keyscan.exe"
+$knownHostsUpdated = $false
 
 if (!(Test-Path $knownHostsPath) -or !(Select-String -Path $knownHostsPath -Pattern '^bitbucket\.org ssh-ed25519 ' -Quiet)) {
   Write-Output "`n * * Add Bitbucket to SSH known hosts * * `n"
   & $sshKeyscanPath -t ed25519 bitbucket.org | Where-Object { $_ -notmatch '^#' } | Out-File $knownHostsPath -Append -Encoding ascii
+  $knownHostsUpdated = $true
 }
 
 if (!(Test-Path $knownHostsPath) -or !(Select-String -Path $knownHostsPath -Pattern '^github\.com ssh-ed25519 ' -Quiet)) {
   Write-Output "`n * * Add GitHub to SSH known hosts * * `n"
   & $sshKeyscanPath -t ed25519 github.com | Where-Object { $_ -notmatch '^#' } | Out-File $knownHostsPath -Append -Encoding ascii
+  $knownHostsUpdated = $true
 }
 
 if (!(Test-Path $knownHostsPath) -or !(Select-String -Path $knownHostsPath -Pattern '^gist\.github\.com ssh-ed25519 ' -Quiet)) {
   Write-Output "`n * * Add GitHub Gist to SSH known hosts * * `n"
   & $sshKeyscanPath -t ed25519 gist.github.com | Where-Object { $_ -notmatch '^#' } | Out-File $knownHostsPath -Append -Encoding ascii
+  $knownHostsUpdated = $true
 }
 
 if (!(Test-Path $knownHostsPath) -or !(Select-String -Path $knownHostsPath -Pattern '^gitlab\.com ssh-ed25519 ' -Quiet)) {
   Write-Output "`n * * Add GitLab to SSH known hosts * * `n"
   & $sshKeyscanPath -t ed25519 gitlab.com | Where-Object { $_ -notmatch '^#' } | Out-File $knownHostsPath -Append -Encoding ascii
+  $knownHostsUpdated = $true
+}
+
+if ($knownHostsUpdated) {
+  Add-Content -Path $knownHostsPath -Value '' -Encoding ascii
 }
 
 if (!(Get-Command gh -ErrorAction SilentlyContinue)) {
