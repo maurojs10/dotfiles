@@ -53,6 +53,26 @@ if [ ! -e ~/.ssh ]; then
   chmod 700 ~/.ssh
 fi
 
+if [ ! -e ~/.ssh/known_hosts ] || ! grep -q "^bitbucket.org ssh-ed25519 " ~/.ssh/known_hosts; then
+  echo -e "\n * * Add Bitbucket to SSH known hosts * * \n"
+  ssh-keyscan -t ed25519 bitbucket.org 2>/dev/null >> ~/.ssh/known_hosts
+fi
+
+if [ ! -e ~/.ssh/known_hosts ] || ! grep -q "^github.com ssh-ed25519 " ~/.ssh/known_hosts; then
+  echo -e "\n * * Add GitHub to SSH known hosts * * \n"
+  ssh-keyscan -t ed25519 github.com 2>/dev/null >> ~/.ssh/known_hosts
+fi
+
+if [ ! -e ~/.ssh/known_hosts ] || ! grep -q "^gist.github.com ssh-ed25519 " ~/.ssh/known_hosts; then
+  echo -e "\n * * Add GitHub Gist to SSH known hosts * * \n"
+  ssh-keyscan -t ed25519 gist.github.com 2>/dev/null >> ~/.ssh/known_hosts
+fi
+
+if [ ! -e ~/.ssh/known_hosts ] || ! grep -q "^gitlab.com ssh-ed25519 " ~/.ssh/known_hosts; then
+  echo -e "\n * * Add GitLab to SSH known hosts * * \n"
+  ssh-keyscan -t ed25519 gitlab.com 2>/dev/null >> ~/.ssh/known_hosts
+fi
+
 if ! command -v gh &> /dev/null; then
   echo -e "\n * * Install GitHub CLI * * \n"
   brew install gh

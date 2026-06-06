@@ -233,6 +233,29 @@ if (!(Test-Path "$env:USERPROFILE\.ssh")) {
   New-Item -Path "$env:USERPROFILE\.ssh" -ItemType Directory | Out-Null
 }
 
+$knownHostsPath = "$env:USERPROFILE\.ssh\known_hosts"
+$sshKeyscanPath = "$env:ProgramFiles\Git\usr\bin\ssh-keyscan.exe"
+
+if (!(Test-Path $knownHostsPath) -or !(Select-String -Path $knownHostsPath -Pattern '^bitbucket\.org ssh-ed25519 ' -Quiet)) {
+  Write-Output "`n * * Add Bitbucket to SSH known hosts * * `n"
+  & $sshKeyscanPath -t ed25519 bitbucket.org 2>$null | Out-File $knownHostsPath -Append -Encoding ascii
+}
+
+if (!(Test-Path $knownHostsPath) -or !(Select-String -Path $knownHostsPath -Pattern '^github\.com ssh-ed25519 ' -Quiet)) {
+  Write-Output "`n * * Add GitHub to SSH known hosts * * `n"
+  & $sshKeyscanPath -t ed25519 github.com 2>$null | Out-File $knownHostsPath -Append -Encoding ascii
+}
+
+if (!(Test-Path $knownHostsPath) -or !(Select-String -Path $knownHostsPath -Pattern '^gist\.github\.com ssh-ed25519 ' -Quiet)) {
+  Write-Output "`n * * Add GitHub Gist to SSH known hosts * * `n"
+  & $sshKeyscanPath -t ed25519 gist.github.com 2>$null | Out-File $knownHostsPath -Append -Encoding ascii
+}
+
+if (!(Test-Path $knownHostsPath) -or !(Select-String -Path $knownHostsPath -Pattern '^gitlab\.com ssh-ed25519 ' -Quiet)) {
+  Write-Output "`n * * Add GitLab to SSH known hosts * * `n"
+  & $sshKeyscanPath -t ed25519 gitlab.com 2>$null | Out-File $knownHostsPath -Append -Encoding ascii
+}
+
 if (!(Get-Command gh -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install GitHub CLI * * `n"
   sudo choco install gh -y
