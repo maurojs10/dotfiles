@@ -690,12 +690,6 @@ if (!(Get-ItemProperty -Path $path -Name $name -ErrorAction SilentlyContinue)) {
   Set-ItemProperty -Path $path -Name $name -Value 1 -Type DWord
 }
 
-$path = "$env:ProgramFiles\Fortinet\FortiClient\FortiClient.exe"
-if (!(Test-Path $path)) {
-  Write-Output "`n * * Install FortiClient VPN * * `n"
-  sudo choco install forticlientvpn -y
-}
-
 if (!(Get-Module PendingReboot -ListAvailable)) {
   Write-Output "`n * * Install PendingReboot PowerShell module * * `n"
   sudo Install-Module PendingReboot -Force
