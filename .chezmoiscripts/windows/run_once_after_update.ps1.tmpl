@@ -390,6 +390,30 @@ if (!(Select-String $PowerShell7ProfilePath -Pattern 'zoxide' -Quiet -SimpleMatc
   $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
 }
 
+if (!(Get-Command atuin -ErrorAction SilentlyContinue)) {
+  Write-Output "`n * * Install atuin * * `n"
+  scoop install atuin
+}
+
+$PowerShell5ProfileText = "`r`n" + @'
+if (Get-Command -Name atuin -ErrorAction SilentlyContinue) {
+  Write-Output 'Loading atuin...'
+  atuin init powershell | Out-String | Invoke-Expression
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Select-String $PowerShell5ProfilePath -Pattern 'atuin' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure atuin in PowerShell 5 profile script * * `n"
+  $PowerShell5ProfileText | Out-File $PowerShell5ProfilePath -Append -Encoding ascii
+}
+
+$PowerShell7ProfileText = $PowerShell5ProfileText
+
+if (!(Select-String $PowerShell7ProfilePath -Pattern 'atuin' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure atuin in PowerShell 7 profile script * * `n"
+  $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
+}
+
 if (!(Get-Command spf -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install superfile * * `n"
   scoop install superfile
