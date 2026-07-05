@@ -113,6 +113,14 @@ GH_USER=$(gh api user --jq '.login')
 gh api "users/$GH_USER/ssh_signing_keys" --paginate --jq '.[].key' > '{{ .ssh.allowedSigners }}'
 
 # shellcheck disable=SC2016 source=/dev/null
+if ! grep -Fxq 'eval "$(zoxide init zsh --cmd cd)"' ~/.zshrc; then
+  echo -e "\n * * Add zoxide to shell configuration * * \n"
+  echo >> ~/.zshrc
+  echo 'eval "$(zoxide init zsh --cmd cd)"' >> ~/.zshrc
+  source ~/.zshrc
+fi
+
+# shellcheck disable=SC2016 source=/dev/null
 if ! grep -Fxq 'eval "$(atuin init zsh --disable-up-arrow)"' ~/.zshrc; then
   echo -e "\n * * Add atuin to shell configuration * * \n"
   echo >> ~/.zshrc
