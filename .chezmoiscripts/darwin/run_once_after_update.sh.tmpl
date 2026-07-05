@@ -14,6 +14,21 @@ if ! grep -Fxq 'eval "$(/opt/homebrew/bin/brew shellenv)"' ~/.zprofile; then
   source ~/.zprofile
 fi
 
+if ! command -v mise &> /dev/null; then
+  echo -e "\n * * Install mise * * \n"
+  brew install mise
+fi
+
+# shellcheck disable=SC2016 source=/dev/null
+if ! grep -Fxq 'eval "$(mise activate zsh)"' ~/.zshrc; then
+  echo -e "\n * * Add mise to shell configuration * * \n"
+  echo >> ~/.zshrc
+  echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
+  source ~/.zshrc
+fi
+
+mise install --cd "$HOME"
+
 if ! command -v git &> /dev/null; then
   echo -e "\n * * Install Git * * \n"
   brew install git
@@ -104,21 +119,6 @@ if ! grep -Fxq 'eval "$(atuin init zsh --disable-up-arrow)"' ~/.zshrc; then
   echo 'eval "$(atuin init zsh --disable-up-arrow)"' >> ~/.zshrc
   source ~/.zshrc
 fi
-
-if ! command -v mise &> /dev/null; then
-  echo -e "\n * * Install mise * * \n"
-  brew install mise
-fi
-
-# shellcheck disable=SC2016 source=/dev/null
-if ! grep -Fxq 'eval "$(mise activate zsh)"' ~/.zshrc; then
-  echo -e "\n * * Add mise to shell configuration * * \n"
-  echo >> ~/.zshrc
-  echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
-  source ~/.zshrc
-fi
-
-mise install --cd "$HOME"
 
 if [ ! -e ~/source ]; then
   echo -e "\n * * Create folder for source code subfolders * * \n"
