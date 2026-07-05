@@ -390,11 +390,6 @@ if (!(Select-String $PowerShell7ProfilePath -Pattern 'zoxide' -Quiet -SimpleMatc
   $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
 }
 
-if (!(Get-Command atuin -ErrorAction SilentlyContinue)) {
-  Write-Output "`n * * Install atuin * * `n"
-  scoop install atuin
-}
-
 $PowerShell5ProfileText = "`r`n" + @'
 if (Get-Command -Name atuin -ErrorAction SilentlyContinue) {
   Write-Output 'Loading atuin...'
