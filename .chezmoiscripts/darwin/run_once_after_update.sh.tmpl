@@ -110,6 +110,8 @@ if ! grep -Fxq 'eval "$(mise activate zsh)"' ~/.zshrc; then
   source ~/.zshrc
 fi
 
+mise install --cd "$HOME"
+
 if [ ! -e ~/source ]; then
   echo -e "\n * * Create folder for source code subfolders * * \n"
   mkdir -p ~/source

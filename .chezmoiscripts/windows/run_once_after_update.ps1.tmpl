@@ -488,6 +488,8 @@ if (!(Select-String $PowerShell7ProfilePath -Pattern 'mise activate' -Quiet -Sim
   $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
 }
 
+mise install --cd "$env:USERPROFILE"
+
 if (!(Test-Path "$env:USERPROFILE\source")) {
   Write-Output "`n * * Create folder for source code subfolders * * `n"
   New-Item -Path "$env:USERPROFILE\source" -ItemType Directory | Out-Null

@@ -187,6 +187,8 @@ if ! grep -Fxq 'eval "$(mise activate bash)"' ~/.bashrc; then
   source ~/.bashrc
 fi
 
+mise install --cd "$HOME"
+
 # {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 if [ ! -e ~/source ] && [ -e "$USERPROFILE/source" ]; then
   echo -e "\n * * Create symlink for source code subfolders * * \n"
