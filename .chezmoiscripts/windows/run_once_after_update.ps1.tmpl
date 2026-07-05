@@ -398,7 +398,7 @@ if (!(Get-Command atuin -ErrorAction SilentlyContinue)) {
 $PowerShell5ProfileText = "`r`n" + @'
 if (Get-Command -Name atuin -ErrorAction SilentlyContinue) {
   Write-Output 'Loading atuin...'
-  atuin init powershell | Out-String | Invoke-Expression
+  atuin init powershell --disable-up-arrow | Out-String | Invoke-Expression
 }
 '@ -replace '\r?\n', "`r`n"
 
