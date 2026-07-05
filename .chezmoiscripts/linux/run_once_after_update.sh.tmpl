@@ -21,6 +21,21 @@ if ! grep -Fxq 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' ~/.bashr
   source ~/.bashrc
 fi
 
+if ! command -v mise &> /dev/null; then
+  echo -e "\n * * Install mise * * \n"
+  brew install mise
+fi
+
+# shellcheck disable=SC2016 source=/dev/null
+if ! grep -Fxq 'eval "$(mise activate bash)"' ~/.bashrc; then
+  echo -e "\n * * Add mise to shell configuration * * \n"
+  echo >> ~/.bashrc
+  echo 'eval "$(mise activate bash)"' >> ~/.bashrc
+  source ~/.bashrc
+fi
+
+mise install --cd "$HOME"
+
 if dpkg --no-pager --list | grep -q '^ii  git '; then
   if ! dpkg-query --show --showformat='${Version}' git | grep -q 'ppa'; then
     echo -e "\n * * Uninstall Git from default repository * * \n"
@@ -194,21 +209,6 @@ if ! grep -Fxq 'eval "$(atuin init bash --disable-up-arrow)"' ~/.bashrc; then
   echo 'eval "$(atuin init bash --disable-up-arrow)"' >> ~/.bashrc
   source ~/.bashrc
 fi
-
-if ! command -v mise &> /dev/null; then
-  echo -e "\n * * Install mise * * \n"
-  brew install mise
-fi
-
-# shellcheck disable=SC2016 source=/dev/null
-if ! grep -Fxq 'eval "$(mise activate bash)"' ~/.bashrc; then
-  echo -e "\n * * Add mise to shell configuration * * \n"
-  echo >> ~/.bashrc
-  echo 'eval "$(mise activate bash)"' >> ~/.bashrc
-  source ~/.bashrc
-fi
-
-mise install --cd "$HOME"
 
 # {{ if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 if [ ! -e ~/source ] && [ -e "$USERPROFILE/source" ]; then
