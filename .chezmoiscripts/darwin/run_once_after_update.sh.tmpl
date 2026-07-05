@@ -97,6 +97,14 @@ echo -e "\n * * Update allowed signers from GitHub * * \n"
 GH_USER=$(gh api user --jq '.login')
 gh api "users/$GH_USER/ssh_signing_keys" --paginate --jq '.[].key' > '{{ .ssh.allowedSigners }}'
 
+# shellcheck disable=SC2016 source=/dev/null
+if ! grep -Fxq 'eval "$(atuin init zsh --disable-up-arrow)"' ~/.zshrc; then
+  echo -e "\n * * Add atuin to shell configuration * * \n"
+  echo >> ~/.zshrc
+  echo 'eval "$(atuin init zsh --disable-up-arrow)"' >> ~/.zshrc
+  source ~/.zshrc
+fi
+
 if ! command -v mise &> /dev/null; then
   echo -e "\n * * Install mise * * \n"
   brew install mise
