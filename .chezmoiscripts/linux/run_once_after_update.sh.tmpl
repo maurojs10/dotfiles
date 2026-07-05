@@ -174,6 +174,27 @@ if ! grep -Fxq 'eval "$(starship init bash)"' ~/.bashrc; then
   source ~/.bashrc
 fi
 
+if [ ! -e ~/.bash-preexec.sh ]; then
+  echo -e "\n * * Download bash-preexec * * \n"
+  curl https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh -o ~/.bash-preexec.sh
+fi
+
+# shellcheck disable=SC2016 source=/dev/null
+if ! grep -Fxq 'source ~/.bash-preexec.sh' ~/.bashrc; then
+  echo -e "\n * * Add bash-preexec to shell configuration * * \n"
+  echo >> ~/.bashrc
+  echo 'source ~/.bash-preexec.sh' >> ~/.bashrc
+  source ~/.bashrc
+fi
+
+# shellcheck disable=SC2016 source=/dev/null
+if ! grep -Fxq 'eval "$(atuin init bash --disable-up-arrow)"' ~/.bashrc; then
+  echo -e "\n * * Add atuin to shell configuration * * \n"
+  echo >> ~/.bashrc
+  echo 'eval "$(atuin init bash --disable-up-arrow)"' >> ~/.bashrc
+  source ~/.bashrc
+fi
+
 if ! command -v mise &> /dev/null; then
   echo -e "\n * * Install mise * * \n"
   brew install mise
