@@ -6,11 +6,11 @@ if ! command -v brew &> /dev/null; then
   sudo apt install build-essential procps curl file git -y
 
   echo -e "\n * * Install Homebrew * * \n"
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
   echo -e "\n * * Install Homebrew recommendations * * \n"
-  brew install gcc
+  brew install gcc -y
 fi
 
 # shellcheck disable=SC2016 source=/dev/null
@@ -23,7 +23,7 @@ fi
 
 if ! command -v mise &> /dev/null; then
   echo -e "\n * * Install mise * * \n"
-  brew install mise
+  brew install mise -y
 fi
 
 # shellcheck disable=SC2016 source=/dev/null
@@ -52,7 +52,7 @@ fi
 
 if ! command -v git-flow &> /dev/null; then
   echo -e "\n * * Install Git Flow Next * * \n"
-  brew install gittower/tap/git-flow-next
+  brew install gittower/tap/git-flow-next -y
 fi
 
 if ! command -v micro &> /dev/null; then
