@@ -112,6 +112,18 @@ echo -e "\n * * Update allowed signers from GitHub * * \n"
 GH_USER=$(gh api user --jq '.login')
 gh api "users/$GH_USER/ssh_signing_keys" --paginate --jq '.[].key' > '{{ .ssh.allowedSigners }}'
 
+if [ ! -e ~/Library/Fonts/CaskaydiaMonoNerdFontMono-Regular.ttf ]; then
+  echo -e "\n * * Download Nerd Fonts CaskaydiaMono * * \n"
+  curl -fsSLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaMono.tar.xz
+
+  echo -e "\n * * Extract Nerd Fonts CaskaydiaMono * * \n"
+  mkdir -p ~/Library/Fonts
+  tar -xf CascadiaMono.tar.xz -C ~/Library/Fonts --exclude='CaskaydiaMonoNerdFont-*.ttf' --exclude='CaskaydiaMonoNerdFontPropo-*.ttf' --exclude='LICENSE' --exclude='README.md'
+
+  echo -e "\n * * Remove Nerd Fonts CaskaydiaMono downloaded file * * \n"
+  rm -f CascadiaMono.tar.xz
+fi
+
 # shellcheck disable=SC2016 source=/dev/null
 if ! grep -Fxq 'eval "$(zoxide init zsh --cmd cd)"' ~/.zshrc; then
   echo -e "\n * * Add zoxide to shell configuration * * \n"
