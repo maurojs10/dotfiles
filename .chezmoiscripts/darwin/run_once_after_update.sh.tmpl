@@ -10,7 +10,7 @@ if ! command -v brew &> /dev/null; then
   done
 
   echo -e "\n * * Install Homebrew * * \n"
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
@@ -24,7 +24,7 @@ fi
 
 if ! command -v mise &> /dev/null; then
   echo -e "\n * * Install mise * * \n"
-  brew install mise
+  brew install mise -y
 fi
 
 # shellcheck disable=SC2016 source=/dev/null
@@ -39,27 +39,27 @@ mise install --cd "$HOME"
 
 if ! command -v git &> /dev/null; then
   echo -e "\n * * Install Git * * \n"
-  brew install git
+  brew install git -y
 fi
 
 if ! command -v git-flow &> /dev/null; then
   echo -e "\n * * Install Git Flow Next * * \n"
-  brew install gittower/tap/git-flow-next
+  brew install gittower/tap/git-flow-next -y
 fi
 
 if ! command -v micro &> /dev/null; then
   echo -e "\n * * Install micro * * \n"
-  brew install micro
+  brew install micro -y
 fi
 
 if ! command -v code &> /dev/null; then
   echo -e "\n * * Install Visual Studio Code * * \n"
-  brew install --cask visual-studio-code
+  brew install visual-studio-code --cask -y
 fi
 
 if [ ! -d "/Applications/Bitwarden.app" ]; then
   echo -e "\n * * Install Bitwarden Desktop * * \n"
-  brew install --cask bitwarden
+  brew install bitwarden --cask -y
 fi
 
 # shellcheck disable=SC2016 source=/dev/null
@@ -108,7 +108,7 @@ fi
 
 if ! command -v gh &> /dev/null; then
   echo -e "\n * * Install GitHub CLI * * \n"
-  brew install gh
+  brew install gh -y
 fi
 
 if ! gh auth status -h github.com &> /dev/null; then
@@ -160,7 +160,7 @@ fi
 
 if ! command -v node &> /dev/null; then
   echo -e "\n * * Install Node.js * * \n"
-  brew install node@22
+  brew install node@22 -y
 fi
 
 if [[ "$(npm config get ignore-scripts --global)" != "true" ]]; then
