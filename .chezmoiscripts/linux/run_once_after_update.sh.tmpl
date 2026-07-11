@@ -164,15 +164,16 @@ echo -e "\n * * Update allowed signers from GitHub * * \n"
 GH_USER=$(gh api user --jq '.login')
 gh api "users/$GH_USER/ssh_signing_keys" --paginate --jq '.[].key' > '{{ .ssh.allowedSigners }}'
 
-if [ ! -e ~/.local/share/fonts/CaskaydiaMonoNerdFont-Regular.ttf ]; then
-  echo -e "\n * * Install Nerd Fonts CaskaydiaMono * * \n"
+if [ ! -e ~/.local/share/fonts/CaskaydiaMonoNerdFontMono-Regular.ttf ]; then
+  echo -e "\n * * Download Nerd Fonts CaskaydiaMono * * \n"
+  curl -fsSLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaMono.tar.xz
+
+  echo -e "\n * * Extract Nerd Fonts CaskaydiaMono * * \n"
   mkdir -p ~/.local/share/fonts
-  chmod 755 ~/.local/share/fonts
-  type -p unzip >/dev/null || (sudo apt update && sudo apt install unzip -y)
-  curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/CascadiaMono.zip -o ~/.local/share/fonts/CascadiaMono.zip
-  unzip -o ~/.local/share/fonts/CascadiaMono.zip 'CaskaydiaMonoNerdFont*.ttf' -d ~/.local/share/fonts
-  rm -f ~/.local/share/fonts/CascadiaMono.zip
-  chmod 644 ~/.local/share/fonts/CaskaydiaMonoNerdFont*.ttf
+  tar -xf CascadiaMono.tar.xz -C ~/.local/share/fonts --exclude='CaskaydiaMonoNerdFont-*.ttf' --exclude='CaskaydiaMonoNerdFontPropo-*.ttf' --exclude='LICENSE' --exclude='README.md'
+
+  echo -e "\n * * Remove Nerd Fonts CaskaydiaMono downloaded file * * \n"
+  rm -f CascadiaMono.tar.xz
 fi
 
 if ! command -v starship &> /dev/null; then
