@@ -374,9 +374,27 @@ Write-Output "`n * * Update allowed signers from GitHub * * `n"
 $GH_USER = (gh api user --jq '.login')
 gh api "users/$GH_USER/ssh_signing_keys" --paginate --jq '.[].key' | Out-File '{{ .ssh.allowedSigners }}' -Encoding utf8
 
-if (!(Test-Path "$env:SystemRoot\Fonts\CaskaydiaMonoNerdFont-Regular.ttf")) {
-  Write-Output "`n * * Install Nerd Fonts CaskaydiaMono * * `n"
-  sudo choco install nerd-fonts-cascadiamono -y
+if (!(Test-Path "$env:LOCALAPPDATA\Microsoft\Windows\Fonts\CaskaydiaMonoNerdFontMono-Regular.ttf")) {
+  Write-Output "`n * * Download Nerd Fonts CaskaydiaMono * * `n"
+  Invoke-WebRequest https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaMono.zip -OutFile CascadiaMono.zip -UseBasicParsing
+
+  Write-Output "`n * * Extract Nerd Fonts CaskaydiaMono * * `n"
+  New-Item "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" -ItemType Directory -Force | Out-Null
+  Expand-Archive CascadiaMono.zip "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" -Force
+  foreach ($file in Get-ChildItem "$env:LOCALAPPDATA\Microsoft\Windows\Fonts\*" -Include 'CaskaydiaMonoNerdFont-*.ttf', 'CaskaydiaMonoNerdFontPropo-*.ttf', 'LICENSE', 'README.md') { Remove-Item $file.FullName }
+
+  Write-Output "`n * * Register Nerd Fonts CaskaydiaMono * * `n"
+  foreach ($file in Get-ChildItem "$env:LOCALAPPDATA\Microsoft\Windows\Fonts" 'CaskaydiaMonoNerdFontMono-*.ttf') {
+    New-ItemProperty `
+    -Path 'HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts' `
+    -Name $file.BaseName `
+    -PropertyType String `
+    -Value $file.FullName `
+    -Force | Out-Null
+  }
+
+  Write-Output "`n * * Remove Nerd Fonts CaskaydiaMono downloaded file * * `n"
+  Remove-Item CascadiaMono.zip
 }
 
 if (!(Get-Command starship -ErrorAction SilentlyContinue)) {
