@@ -44,6 +44,7 @@ fi
 
 if ! command -v git-flow &> /dev/null; then
   echo -e "\n * * Install Git Flow Next * * \n"
+  brew trust gittower/tap/git-flow-next --formula
   brew install gittower/tap/git-flow-next -y
 fi
 
