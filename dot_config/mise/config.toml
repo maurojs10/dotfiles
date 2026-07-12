@@ -1,3 +1,4 @@
 [tools]
 atuin = "latest"
+starship = "latest"
 zoxide = "latest"
