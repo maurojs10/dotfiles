@@ -176,12 +176,6 @@ if [ ! -e ~/.local/share/fonts/CaskaydiaMonoNerdFontMono-Regular.ttf ]; then
   rm -f CascadiaMono.tar.xz
 fi
 
-if ! command -v starship &> /dev/null; then
-  echo -e "\n * * Install Starship * * \n"
-  curl -sS https://starship.rs/install.sh | sh -s -- --yes
-  eval "$(starship init bash)"
-fi
-
 # shellcheck disable=SC2016 source=/dev/null
 if ! grep -Fxq 'eval "$(starship init bash)"' ~/.bashrc; then
   echo -e "\n * * Add Starship to shell configuration * * \n"
