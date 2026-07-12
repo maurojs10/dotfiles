@@ -397,11 +397,6 @@ if (!(Test-Path "$env:LOCALAPPDATA\Microsoft\Windows\Fonts\CaskaydiaMonoNerdFont
   Remove-Item CascadiaMono.zip
 }
 
-if (!(Get-Command starship -ErrorAction SilentlyContinue)) {
-  Write-Output "`n * * Install Starship * * `n"
-  sudo choco install starship -y
-}
-
 $PowerShell5ProfileText = "`r`n" + @'
 if (Get-Command -Name starship -ErrorAction SilentlyContinue) {
   Write-Output 'Loading starship...'
