@@ -93,6 +93,26 @@ if (!(Test-Path $PowerShell7ProfilePath)) {
 }
 
 $PowerShell5ProfileText = "`r`n" + @'
+Set-PSReadLineKeyHandler -Chord Ctrl+d -ScriptBlock {
+  [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
+  [Microsoft.PowerShell.PSConsoleReadLine]::Insert('exit')
+  [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
+}
+'@ -replace '\r?\n', "`r`n"
+
+if (!(Select-String $PowerShell5ProfilePath -Pattern '$ChocolateyProfile' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure keybindings in PowerShell 5 profile script * * `n"
+  $PowerShell5ProfileText | Out-File $PowerShell5ProfilePath -Append -Encoding ascii
+}
+
+$PowerShell7ProfileText = $PowerShell5ProfileText
+
+if (!(Select-String $PowerShell7ProfilePath -Pattern '$ChocolateyProfile' -Quiet -SimpleMatch)) {
+  Write-Output "`n * * Configure keybindings in PowerShell 7 profile script * * `n"
+  $PowerShell7ProfileText | Out-File $PowerShell7ProfilePath -Append -Encoding ascii
+}
+
+$PowerShell5ProfileText = "`r`n" + @'
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path $ChocolateyProfile) {
   Write-Output 'Loading chocolatey profile...'
