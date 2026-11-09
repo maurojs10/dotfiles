@@ -529,8 +529,12 @@ if ($LASTEXITCODE -ne 0) {
   sudo wsl --install --no-distribution
 }
 
-Write-Output "`n * * Set environment variables for WSL * * `n"
-setx WSLENV USERPROFILE/up
+$WSLENV_REQUIRED = 'WT_SESSION:WT_PROFILE_ID:USERPROFILE/up'
+if ($env:WSLENV -ne $WSLENV_REQUIRED) {
+  Write-Output "`n * * Set environment variables for WSL * * `n"
+  setx WSLENV $WSLENV_REQUIRED
+  refreshenv
+}
 
 if (!(Get-PackageProvider NuGet -ListAvailable -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install NuGet PowerShell package provider * * `n"
