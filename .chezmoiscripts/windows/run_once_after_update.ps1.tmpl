@@ -523,6 +523,12 @@ if (!(Test-Path "$env:USERPROFILE\source\repos")) {
   New-Item -Path "$env:USERPROFILE\source\repos" -ItemType Directory | Out-Null
 }
 
+wsl --status 2>&1 | Out-Null
+if ($LASTEXITCODE -ne 0) {
+  Write-Output "`n * * Install Windows Subsystem for Linux (WSL) * * `n"
+  sudo wsl --install --no-distribution
+}
+
 Write-Output "`n * * Set environment variables for WSL * * `n"
 setx WSLENV USERPROFILE/up
 
