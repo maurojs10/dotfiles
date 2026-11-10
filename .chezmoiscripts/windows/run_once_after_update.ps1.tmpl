@@ -267,17 +267,6 @@ if (!(Get-Command git -ErrorAction SilentlyContinue)) {
   refreshenv
 }
 
-if (!(git extras --version)) {
-  Write-Output "`n * * Install Git Extras * * `n"
-  $path = Join-Path $env:TEMP (New-Guid)
-  git clone 'https://github.com/tj/git-extras.git' $path
-  Push-Location $path
-  git checkout (git describe --tags (git rev-list --tags --max-count=1))
-  sudo .\install.cmd
-  Pop-Location
-  Remove-Item $path -Force -Recurse
-}
-
 $path = "$env:ProgramFiles\Git\usr\bin\git-flow"
 if (!(Test-Path $path) -and !(Get-Command git-flow -ErrorAction SilentlyContinue)) {
   Write-Output "`n * * Install Git Flow Next * * `n"
